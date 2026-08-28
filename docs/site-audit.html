@@ -1,0 +1,745 @@
+<title>Amrut Maharashtra Site Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Devanagari:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --ground:      #ffffff;
+    --surface:     #f3f5f7;
+    --surface-2:   #e9edf1;
+    --ink:         #12171f;
+    --ink-soft:    #3c4552;
+    --muted:       #666f7d;
+    --rule:        #dbe1e8;
+    --rule-strong: #c2cad4;
+    --accent:      #c65708;
+    --accent-soft: #fbeee3;
+    --crit:        #a81f16;
+    --crit-soft:   #fbe9e7;
+    --major:       #96600a;
+    --major-soft:  #fbf1de;
+    --minor:       #35566e;
+    --minor-soft:  #e8eff4;
+    --good:        #1a6640;
+
+    --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --body: "IBM Plex Sans", "IBM Plex Sans Devanagari", "Noto Sans Devanagari", system-ui, sans-serif;
+    --deva: "IBM Plex Sans Devanagari", "Noto Sans Devanagari", var(--body);
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #0e1218;
+      --surface:     #151b23;
+      --surface-2:   #1d2530;
+      --ink:         #e5e9ef;
+      --ink-soft:    #b8c1cd;
+      --muted:       #8a94a2;
+      --rule:        #242d39;
+      --rule-strong: #35404e;
+      --accent:      #ef8f45;
+      --accent-soft: #2a1d13;
+      --crit:        #f08279;
+      --crit-soft:   #2c1614;
+      --major:       #e0ac52;
+      --major-soft:  #2a2113;
+      --minor:       #8fb6cf;
+      --minor-soft:  #16222b;
+      --good:        #5cba86;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #0e1218;
+    --surface:     #151b23;
+    --surface-2:   #1d2530;
+    --ink:         #e5e9ef;
+    --ink-soft:    #b8c1cd;
+    --muted:       #8a94a2;
+    --rule:        #242d39;
+    --rule-strong: #35404e;
+    --accent:      #ef8f45;
+    --accent-soft: #2a1d13;
+    --crit:        #f08279;
+    --crit-soft:   #2c1614;
+    --major:       #e0ac52;
+    --major-soft:  #2a2113;
+    --minor:       #8fb6cf;
+    --minor-soft:  #16222b;
+    --good:        #5cba86;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead {
+    border-bottom: 2px solid var(--ink);
+    padding: 56px 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2.1rem, 5.6vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.026em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .standfirst {
+    font-size: 1.075rem;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    padding-top: 6px;
+  }
+
+  .meta-row b {
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ---------- sections ---------- */
+
+  section { padding-top: 60px; }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.55rem;
+    letter-spacing: -0.018em;
+    margin: 0 0 6px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  h2 .sec-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    flex: none;
+  }
+
+  .sec-lede {
+    color: var(--muted);
+    max-width: 66ch;
+    margin: 0 0 26px;
+    font-size: 0.95rem;
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    letter-spacing: -0.008em;
+    margin: 0 0 10px;
+  }
+
+  p { margin: 0 0 14px; max-width: 68ch; }
+  .prose p:last-child { margin-bottom: 0; }
+
+  .deva { font-family: var(--deva); }
+
+  code, .mono { font-family: var(--mono); font-size: 0.86em; }
+  code {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1px 5px;
+    word-break: break-word;
+  }
+
+  /* ---------- at a glance ---------- */
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  .stat {
+    background: var(--ground);
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .stat .n {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.7rem;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+
+  .stat .n.warn { color: var(--crit); }
+
+  .stat .k {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.35;
+  }
+
+  /* ---------- what it is ---------- */
+
+  .brief {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+    gap: 22px 34px;
+    margin-top: 4px;
+  }
+
+  .brief-item {
+    border-top: 2px solid var(--rule-strong);
+    padding-top: 12px;
+  }
+
+  .brief-item h3 { margin-bottom: 6px; }
+  .brief-item p { font-size: 0.925rem; color: var(--ink-soft); }
+
+  .cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 18px;
+  }
+
+  .cat {
+    font-family: var(--deva);
+    font-size: 0.83rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 3px 11px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  /* ---------- findings ---------- */
+
+  .findings {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .finding {
+    display: grid;
+    grid-template-columns: 108px 1fr;
+    gap: 0 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .f-rail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .f-id {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .chip.crit  { background: var(--crit-soft);  color: var(--crit);  }
+  .chip.major { background: var(--major-soft); color: var(--major); }
+  .chip.minor { background: var(--minor-soft); color: var(--minor); }
+
+  .f-body h3 { margin-bottom: 6px; }
+  .f-body p { font-size: 0.94rem; color: var(--ink-soft); margin-bottom: 8px; }
+
+  .evidence {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.55;
+    border-left: 2px solid var(--rule-strong);
+    padding-left: 11px;
+    max-width: 74ch;
+  }
+
+  .evidence b { color: var(--ink-soft); font-weight: 500; }
+
+  /* ---------- additions ---------- */
+
+  .adds {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  .add {
+    background: var(--ground);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .add-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .add h3 { margin: 0; }
+  .add p { font-size: 0.9rem; color: var(--ink-soft); margin: 0; }
+
+  .add .why {
+    font-size: 0.845rem;
+    color: var(--muted);
+    border-top: 1px dashed var(--rule-strong);
+    padding-top: 8px;
+    margin-top: auto;
+  }
+
+  /* ---------- callout ---------- */
+
+  .callout {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 18px 20px;
+    margin: 26px 0 0;
+  }
+
+  .callout h3 { margin-bottom: 8px; }
+  .callout p { font-size: 0.94rem; color: var(--ink-soft); }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* ---------- decisions ---------- */
+
+  ol.decisions {
+    list-style: none;
+    counter-reset: d;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  ol.decisions li {
+    counter-increment: d;
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  ol.decisions li::before {
+    content: counter(d, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    padding-top: 4px;
+  }
+
+  ol.decisions p { margin: 0; font-size: 0.945rem; color: var(--ink-soft); }
+  ol.decisions strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- scope note ---------- */
+
+  .scope {
+    margin-top: 60px;
+    border-top: 1px solid var(--rule);
+    padding-top: 18px;
+    font-size: 0.86rem;
+    color: var(--muted);
+    max-width: 72ch;
+  }
+
+  .scope h3 {
+    font-size: 0.8rem;
+    font-family: var(--mono);
+    font-weight: 400;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .scope p { font-size: 0.86rem; margin-bottom: 10px; max-width: none; }
+
+  @media (max-width: 560px) {
+    .finding { grid-template-columns: 1fr; gap: 12px; }
+    .f-rail { flex-direction: row; align-items: center; gap: 10px; }
+    .wrap { padding: 0 18px 72px; }
+    .masthead { padding-top: 40px; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Site audit · 28 August 2026</p>
+    <h1>Amrut Maharashtra</h1>
+    <p class="standfirst">A working review of <a href="https://amrutmaharashtra.org/">amrutmaharashtra.org</a> as it stands today — what the portal is, where it breaks, and what it could become. Everything below was checked in the live site.</p>
+    <div class="meta-row">
+      <span><b>Stack</b> PHP · Bootstrap</span>
+      <span><b>Language</b> Marathi (mixed Hindi / English)</span>
+      <span><b>Reviewed</b> desktop, live production</span>
+    </div>
+  </header>
+
+  <section>
+    <h2><span class="sec-num">01</span> What it is</h2>
+    <p class="sec-lede">A positive-news and information portal for AMRUT — <span class="deva">महाराष्ट्र संशोधन, उन्नती व प्रशिक्षण प्रबोधिनी</span>, an autonomous body of the Government of Maharashtra.</p>
+
+    <div class="brief">
+      <div class="brief-item">
+        <h3>Who it serves</h3>
+        <p>Economically weaker households in open-category communities that receive no other government corporation's benefit — 24 listed castes, annual income under ₹8 lakh. AMRUT runs offices in all 36 districts.</p>
+      </div>
+      <div class="brief-item">
+        <h3>What the portal does</h3>
+        <p>It is the storytelling arm, not the service arm. Scheme news, beneficiary success stories, district-office activity, plus a broad cultural strand — spirituality, tourism, farming, students, women's achievement.</p>
+      </div>
+      <div class="brief-item">
+        <h3>Two portals, one org</h3>
+        <p>This site is content only. Applications live on a separate portal — <code>mahaamrut.org.in</code> and <code>app.mahaamrut.org.in</code>. The homepage banners deep-link into it; the article pages never do.</p>
+      </div>
+      <div class="brief-item">
+        <h3>What already works</h3>
+        <p>More than there looks to be: working search, comments, per-article view counts, district tagging, a sponsored-content slot, related-articles, share buttons, and a live <span class="deva">अमृत परिवार</span> household survey form.</p>
+      </div>
+    </div>
+
+    <div class="cats">
+      <span class="cat">अमृत घडामोडी</span><span class="cat">लाभार्थी स्टोरी</span><span class="cat">ब्लॉग</span><span class="cat">अमृत सेवाकार्य</span><span class="cat">दिनविशेष</span><span class="cat">यशस्वी उद्योजक</span><span class="cat">शब्दामृत</span><span class="cat">स्मार्ट शेतकरी</span><span class="cat">सक्षम विद्यार्थी</span><span class="cat">अध्यात्म</span><span class="cat">सामाजिक परिवर्तक</span><span class="cat">स्त्रीशक्ती</span><span class="cat">पर्यटन</span><span class="cat">वार्ता</span><span class="cat">लेख</span><span class="cat">शासकीय योजना</span>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="sec-num">02</span> At a glance</h2>
+    <p class="sec-lede">Measured on the live homepage and article template.</p>
+    <div class="stats">
+      <div class="stat"><span class="n">16</span><span class="k">content categories</span></div>
+      <div class="stat"><span class="n">~3,300</span><span class="k">articles published</span></div>
+      <div class="stat"><span class="n">~80</span><span class="k">images on the homepage</span></div>
+      <div class="stat"><span class="n warn">0</span><span class="k">lazy-loaded or responsive</span></div>
+      <div class="stat"><span class="n warn">0</span><span class="k">robots.txt / sitemap.xml</span></div>
+      <div class="stat"><span class="n">651<span style="font-size:.55em;font-weight:500"> ms</span></span><span class="k">page load, warm cache</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="sec-num">03</span> What it lacks</h2>
+    <p class="sec-lede">Fifteen findings, most severe first. Each was reproduced in the browser.</p>
+
+    <div class="findings">
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-01</span><span class="chip crit">Critical</span></div>
+        <div class="f-body">
+          <h3>The visitor counter is fabricating numbers</h3>
+          <p>The footer's "Total Visitors" figure climbs by tens of thousands while you sit on the page, then reads zero on every inner page. On a site whose footer declares "This is an official government website," a counter that visibly invents its own traffic is the fastest way to lose a reader's trust.</p>
+          <p class="evidence"><b>Observed on the homepage over roughly one minute:</b><br>2,03,935 → 2,60,193 → 2,74,257 → 2,95,354 → 3,09,418<br><b>Same footer on</b> <code>about_us.php</code> <b>and any article:</b> 0</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-02</span><span class="chip crit">Critical</span></div>
+        <div class="f-body">
+          <h3>The Contact button does nothing</h3>
+          <p><span class="deva">संपर्क</span> sits in the primary navigation, styled as the one highlighted call to action, and is wired to nothing. There is no contact page anywhere on the site — an email and a phone number in the footer are the whole of it.</p>
+          <p class="evidence"><b>Markup:</b> <code>&lt;a href="javascript:void(0);"&gt;</code> with no bound handler. Clicked; nothing happens.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-03</span><span class="chip crit">Critical</span></div>
+        <div class="f-body">
+          <h3>Every story ends in a dead end</h3>
+          <p>Each article closes with the same block of boilerplate: here is who qualifies, 24 castes, income under ₹8 lakh, now go contact your district office. The site never says where that office is, never links the scheme being described, and never offers a way to apply. A reader who has just been convinced by a success story has nowhere to go.</p>
+          <p class="evidence"><b>Example:</b> a beneficiary story on the <span class="deva">व्याज परतावा</span> interest-refund scheme prints the Solapur office address inside the prose, then stops. No link to the scheme, no link to the application portal, no district directory on the site.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-04</span><span class="chip crit">Critical</span></div>
+        <div class="f-body">
+          <h3>A form collecting caste and contact data, with no privacy notice</h3>
+          <p>The <span class="deva">अमृत परिवार सर्वेक्षण २०२६</span> form asks for name, age, gender, caste category, village, district, mobile and email. There is no privacy policy, no consent statement, and no stated purpose or retention period anywhere on the site. Under the DPDP Act 2023 that notice is not optional.</p>
+          <p class="evidence"><b>Page:</b> <code>amrut_family_registration.php</code> — served over HTTPS, no linked policy, no consent checkbox.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-05</span><span class="chip major">Major</span></div>
+        <div class="f-body">
+          <h3>Search engines cannot see the archive</h3>
+          <p>No <code>robots.txt</code>, no <code>sitemap.xml</code>, and article URLs carry no words at all. Roughly 3,300 Marathi articles — the portal's entire asset — are close to invisible in search, and a shared link tells the recipient nothing.</p>
+          <p class="evidence"><b>Both return the 404 page.</b> Article URLs look like <code>news.php?id=3283</code> rather than a readable slug.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-06</span><span class="chip major">Major</span></div>
+        <div class="f-body">
+          <h3>Navigation disappears once you go anywhere</h3>
+          <p>The category bar — the site's whole structure — exists only on the homepage. Open an article, the About page, or a search result and it vanishes, leaving a single "back to home" crumb. Readers cannot move sideways between categories; they can only bounce back to the top and start again.</p>
+          <p class="evidence"><b>Confirmed on</b> <code>about_us.php</code>, <code>search.php</code>, and the article template.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-07</span><span class="chip major">Major</span></div>
+        <div class="f-body">
+          <h3>Images are being served at up to 18× the size they display</h3>
+          <p>Around 80 images load on the homepage, none lazily, none responsive, effectively none in a modern format. A 1600×2133 photograph is downloaded in full to fill a 150×200 thumbnail. For an audience largely on rural mobile data, this is the single biggest cost the site imposes on its readers.</p>
+          <p class="evidence"><b>Homepage:</b> ~80 images · <b>lazy-loaded:</b> 0 · <b>with srcset:</b> 0 · <b>WebP/AVIF:</b> 1<br><b>Worst offenders:</b> 1600×2133 → 150×200 · 1600×802 → 120×60 · 396×631 → 22×35</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-08</span><span class="chip major">Major</span></div>
+        <div class="f-body">
+          <h3>Nothing about the schemes exists as content</h3>
+          <p>There is no scheme directory, no eligibility page, no document checklist, no deadline listing. Eligibility rules live only as a paragraph repeated at the bottom of every article. The <span class="deva">शासकीय योजना</span> category carries news <em>about</em> schemes, but the schemes themselves are never described in one place a person can be sent to.</p>
+          <p class="evidence"><b>Consequence:</b> the most common real question — "do I qualify, and what do I need?" — has no page to answer it.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-09</span><span class="chip major">Major</span></div>
+        <div class="f-body">
+          <h3>None of the accessibility provisions a government site is expected to carry</h3>
+          <p>No skip-to-content link, no text-size controls, no high-contrast mode, no accessibility statement, no screen-reader page. The sixteen scheme banners on the homepage are image-only links with no accessible text. This is the standard GIGW checklist for an Indian government portal, and none of it is present.</p>
+          <p class="evidence"><b>16 links</b> to the scheme portal with empty link text and no <code>aria-label</code>.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-10</span><span class="chip major">Major</span></div>
+        <div class="f-body">
+          <h3>The 404 page is someone else's template</h3>
+          <p>A wrong URL lands on a stock illustration of a skateboarder above the words "This Page Does Not Exist." No masthead, no navigation, no link home, no Marathi, no emblem — nothing identifying it as a government site at all. It is where every broken and mistyped link ends.</p>
+          <p class="evidence"><b>Reproduced at</b> <code>/robots.txt</code>, <code>/sitemap.xml</code>, and any unknown path.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-11</span><span class="chip major">Major</span></div>
+        <div class="f-body">
+          <h3>Search finds everything and ranks nothing</h3>
+          <p>It works — 135 results for <span class="deva">शेती</span> — but it is a plain substring match. The top result for "farming" was an article about a coconut festival. No relevance order, no filters by category, district or date, and the results page drops the navigation like every other inner page.</p>
+          <p class="evidence"><b>Query</b> <span class="deva">शेती</span> <b>→ 135 results;</b> positions 1 and 3 had no farming content.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-12</span><span class="chip minor">Minor</span></div>
+        <div class="f-body">
+          <h3>Two URLs serve an identical homepage</h3>
+          <p><code>news.php</code> with no parameters renders the homepage byte for byte. Duplicate content, split ranking signals, and a second address for the same page.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-13</span><span class="chip minor">Minor</span></div>
+        <div class="f-body">
+          <h3>One page title, reused everywhere</h3>
+          <p>Article pages get proper titles. Everything else — the About page included — is served as "<span class="deva">अमृत महाराष्ट्र</span> - Latest News &amp; Updates" with the same generic English meta description, on a site written almost entirely in Marathi.</p>
+          <p class="evidence"><b>Description on every page:</b> "Latest news, government initiatives, and developments in Maharashtra"</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-14</span><span class="chip minor">Minor</span></div>
+        <div class="f-body">
+          <h3>The header eats a quarter of the screen</h3>
+          <p>Three stacked bars — emblem strip, logo strip, category bar — occupy roughly 200px and stay pinned while scrolling. On a laptop that is a quarter of the viewport permanently spent on chrome; on a phone the top of the page is almost entirely header.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="f-rail"><span class="f-id">F-15</span><span class="chip minor">Minor</span></div>
+        <div class="f-body">
+          <h3>No way to subscribe to anything</h3>
+          <p>A portal publishing several articles a day offers no RSS feed, no newsletter, no WhatsApp channel — despite a floating WhatsApp button in the corner. Every returning reader has to remember to come back on their own.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="sec-num">04</span> What to add</h2>
+    <p class="sec-lede">Ordered by what changes most for the reader, not by what is easiest to build.</p>
+
+    <div class="adds">
+
+      <div class="add">
+        <span class="add-tag">Highest impact</span>
+        <h3>A scheme directory</h3>
+        <p>One page per scheme: who qualifies, what it pays, documents needed, deadlines, and a direct link into the application portal. Every article that mentions a scheme links to its page.</p>
+        <p class="why">Turns 3,300 stories into 3,300 entry points instead of 3,300 dead ends.</p>
+      </div>
+
+      <div class="add">
+        <span class="add-tag">Highest impact</span>
+        <h3>District office finder</h3>
+        <p>All 36 districts, searchable, with address, phone and the district manager's name. The addresses already exist — they are buried in article prose, one office at a time.</p>
+        <p class="why">Every article already tells people to contact their district office. This is the page that answers it.</p>
+      </div>
+
+      <div class="add">
+        <span class="add-tag">Highest impact</span>
+        <h3>Am I eligible?</h3>
+        <p>A short guided check — community, income, district, what you want to do — ending in the schemes that actually apply to you, in Marathi, on a phone.</p>
+        <p class="why">The rules are unusually specific. Most people cannot self-assess from a paragraph of prose.</p>
+      </div>
+
+      <div class="add">
+        <span class="add-tag">Structure</span>
+        <h3>Persistent navigation and real category pages</h3>
+        <p>Keep the category bar on every page. Give each of the 16 categories a proper archive with pagination, and add district and date filters to search.</p>
+        <p class="why">Fixes the dead end at the bottom of every inner page.</p>
+      </div>
+
+      <div class="add">
+        <span class="add-tag">Reach</span>
+        <h3>Findable, shareable articles</h3>
+        <p>Readable URLs, a sitemap, robots.txt, per-page titles and descriptions, NewsArticle structured data, and Open Graph cards that render properly in WhatsApp.</p>
+        <p class="why">WhatsApp is how this content actually travels in Maharashtra. Right now a shared link previews as nothing.</p>
+      </div>
+
+      <div class="add">
+        <span class="add-tag">Reach</span>
+        <h3>An image pipeline</h3>
+        <p>Resize on upload, serve WebP, responsive <code>srcset</code>, lazy-load below the fold. Nothing else on this list is felt as immediately on a slow connection.</p>
+        <p class="why">Roughly a 10× reduction in homepage weight, with no visible change.</p>
+      </div>
+
+      <div class="add">
+        <span class="add-tag">Compliance</span>
+        <h3>Privacy policy and consent</h3>
+        <p>A published policy, an explicit consent step on the survey form, a stated purpose and retention period, and a named grievance officer.</p>
+        <p class="why">Required before that form should keep collecting caste and contact data.</p>
+      </div>
+
+      <div class="add">
+        <span class="add-tag">Compliance</span>
+        <h3>Accessibility pass</h3>
+        <p>Skip links, text-size and contrast controls, alt text and labels on the banner links, keyboard focus states, and a published accessibility statement.</p>
+        <p class="why">The GIGW baseline for a government portal, currently absent entirely.</p>
+      </div>
+
+      <div class="add">
+        <span class="add-tag">Retention</span>
+        <h3>Something to subscribe to</h3>
+        <p>A WhatsApp channel first — that is where the audience is — plus RSS and an optional email digest. Weekly, in Marathi.</p>
+        <p class="why">A daily-publishing portal with no return mechanism is starting from zero every morning.</p>
+      </div>
+
+      <div class="add">
+        <span class="add-tag">Trust</span>
+        <h3>Contact page, real 404, honest counter</h3>
+        <p>Wire up <span class="deva">संपर्क</span> to an actual page with a form and the head-office details. Rebuild the 404 in the site's own identity with a search box. Either report real analytics or drop the counter.</p>
+        <p class="why">Three small fixes that stop the site undermining its own credibility.</p>
+      </div>
+
+    </div>
+
+    <div class="callout">
+      <h3>The one thing worth deciding first</h3>
+      <p>This site is currently a magazine that happens to be run by a government agency. Everything above points the same way: the missing layer is the bridge between a story and the scheme it is about. A reader finishes a piece about a farmer who got a tractor through the interest-refund scheme, is told he qualifies if he earns under ₹8 lakh, and is then left to find AMRUT's district office on his own.</p>
+      <p>Build the scheme directory, the district finder and the eligibility check, and every article already published becomes a funnel. Nothing else on the list changes the portal's purpose that much.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="sec-num">05</span> What I need from you</h2>
+    <p class="sec-lede">Answers here decide what the new project in <code>~/Amrut_Maharashtra</code> actually becomes.</p>
+
+    <ol class="decisions">
+      <li><p><strong>Rebuild or repair?</strong> Is this a ground-up replacement of the PHP site, or a new front end on the same content, or a separate section that sits alongside it?</p></li>
+      <li><p><strong>Who owns the content?</strong> Is there a CMS and admin panel behind this that we keep, and can we get at the article database and the district office list?</p></li>
+      <li><p><strong>Is the scheme portal ours too?</strong> <code>mahaamrut.org.in</code> and the application portal are separate systems. Do we integrate, or just link out well?</p></li>
+      <li><p><strong>Who signs off?</strong> An official government portal has an approving authority. Knowing who reviews this changes how much we can move.</p></li>
+      <li><p><strong>Marathi first, or bilingual?</strong> There is Hindi and English content mixed in today with no language switch. Worth settling before any content work.</p></li>
+    </ol>
+  </section>
+
+  <div class="scope">
+    <h3>Scope of this review</h3>
+    <p>Checked in the live site on desktop: homepage, About, an article page, search results, the family survey form, the 404, <code>robots.txt</code> and <code>sitemap.xml</code>, plus the page's own markup and image loading. Every finding above was reproduced directly.</p>
+    <p>Not covered: mobile rendering on a real device, the admin or CMS side, server configuration and security, the separate scheme portal at <code>app.mahaamrut.org.in</code>, and content accuracy. A privacy policy may exist somewhere unlinked — I could not find one from any page on the site.</p>
+  </div>
+
+</div>
