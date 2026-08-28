@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
-import { Link, useParams, Navigate } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Reveal from '../components/Reveal'
 import { StoryFeature, StoryCard, RecordRow, CompactRow } from '../components/Cards'
 import { SchemeBand } from '../components/Scheme'
-import { categoryBySlug, categories, hasArticle } from '../lib/content'
+import { categoryBySlug, categories } from '../lib/content'
+import NotFound from './NotFound'
 
 function Crumb({ mr }) {
   return (
@@ -27,7 +28,7 @@ export default function Category() {
     window.scrollTo(0, 0)
   }, [catSlug])
 
-  if (!cat) return <Navigate to="/" replace />
+  if (!cat) return <NotFound />
 
   const [lead, ...rest] = cat.items
   const siblings = categories.filter((c) => c.register === cat.register && c.slug !== cat.slug)

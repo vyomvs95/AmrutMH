@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
-import { Link, useParams, Navigate } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Img from '../components/Img'
 import Reveal from '../components/Reveal'
 import { SchemeBridge } from '../components/Scheme'
 import { StoryCard } from '../components/Cards'
 import { itemById, img, dateMr, schemeFor, hasArticle, org } from '../lib/content'
 import { articleById, articleHero } from '../lib/articles'
+import NotFound from './NotFound'
 
 function Meta({ article }) {
   const rows = [
@@ -36,7 +37,7 @@ export default function Article() {
     window.scrollTo(0, 0)
   }, [article, id])
 
-  if (!article) return <Navigate to="/" replace />
+  if (!article) return <NotFound />
 
   const hero = articleHero(article)
   const scheme = schemeFor(article)
