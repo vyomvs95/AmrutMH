@@ -1,22 +1,26 @@
 import { Link } from 'react-router-dom'
-import Img from '../components/Img'
+import Hero from '../components/Hero'
+import CategoryRail from '../components/CategoryRail'
 import Reveal from '../components/Reveal'
 import { SchemeBand } from '../components/Scheme'
 import { StoryFeature, StoryCard, RecordRow, CompactRow, SectionHead } from '../components/Cards'
-import {
-  categories, byRegister, categoryBySlug, leadImage,
-  dateMr, hasArticle, districts,
-} from '../lib/content'
+import { byRegister, categoryBySlug, hasArticle, districts } from '../lib/content'
 
-/* The lead is chosen from the People strand, preferring a story we
-   hold in full so the reader can actually open it. */
-function pickLead() {
-  const people = byRegister('people').flatMap((c) => c.items)
-  return people.find((i) => hasArticle(i.id)) || people[0]
+/* The rotating leads: one story from each People category, preferring
+   ones we hold in full so the reader can actually open them, and only
+   ones with artwork strong enough to carry a full-bleed frame. */
+function pickLeads(n = 5) {
+  const picked = []
+  for (const c of byRegister('people')) {
+    const item = c.items.find((i) => hasArticle(i.id)) || c.items[0]
+    if (item) picked.push(item)
+  }
+  return picked.slice(0, n)
 }
 
 export default function Home() {
-  const lead = pickLead()
+  const leads = pickLeads()
+  const lead = leads[0]
 
   const peopleCats = byRegister('people')
   const recordCats = byRegister('record')
@@ -34,76 +38,11 @@ export default function Home() {
     .filter((i) => i.id !== lead.id && !features.some((f) => f.id === i.id))
     .slice(0, 3)
 
-  const leadImg = leadImage(lead)
-
   return (
     <>
-      {/* ============================================================
-          Lead — one person, one photograph, the story first.
-          ============================================================ */}
-      <section className="border-b border-warm-200 bg-cream">
-        <div className="mx-auto grid max-w-[86rem] gap-8 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16 lg:py-20">
-          <div className="order-2 lg:order-1">
-            <p className="label">{lead.catMr}</p>
-            <h1 className="mt-4 font-serif text-[clamp(1.9rem,4.6vw,3.35rem)] leading-[1.24] text-ink">
-              {hasArticle(lead.id) ? (
-                <Link to={lead.href} className="transition-colors hover:text-saffron-deep">{lead.title}</Link>
-              ) : (
-                lead.title
-              )}
-            </h1>
-            <p className="lede mt-5 line-clamp-4 max-w-[34rem]">{lead.excerpt}</p>
+      <Hero items={leads} />
 
-            <div className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2">
-              <p className="meta">
-                <span className="text-ink-2">{lead.author}</span>
-                <span className="mx-2 text-warm-300" aria-hidden="true">·</span>
-                <span>{dateMr(lead.date)}</span>
-              </p>
-            </div>
-
-            {hasArticle(lead.id) && (
-              <Link
-                to={lead.href}
-                className="group mt-8 inline-flex items-center gap-2.5 rounded-full bg-ink px-6 py-3 text-[15px] font-semibold text-cream transition-colors hover:bg-saffron-deep"
-              >
-                पूर्ण गोष्ट वाचा
-                <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
-                  <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Link>
-            )}
-          </div>
-
-          <div className="order-1 lg:order-2">
-            <div className="zoom-wrap rounded-lg bg-warm-100">
-              <Img
-                data={leadImg}
-                alt={lead.title}
-                priority
-                sizes="(min-width: 1024px) 48vw, 100vw"
-                className="aspect-[4/3] w-full object-cover lg:aspect-[7/6]"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Category rail — the navigation the live site loses on every
-          inner page, kept visible and scrollable on small screens. */}
-      <nav aria-label="विभाग" className="border-b border-warm-200 bg-paper">
-        <div className="no-bar mx-auto flex max-w-[86rem] gap-6 overflow-x-auto px-5 py-3.5 sm:px-8">
-          {categories.map((c) => (
-            <Link
-              key={c.slug}
-              to={`/${c.slug}`}
-              className="shrink-0 whitespace-nowrap text-[14.5px] font-semibold text-ink-2 transition-colors hover:text-saffron-deep"
-            >
-              <span className="underline-grow">{c.mr}</span>
-            </Link>
-          ))}
-        </div>
-      </nav>
+      <CategoryRail />
 
       {/* ============================================================
           माणसं — the People strand. Editorial rhythm, alternating,
