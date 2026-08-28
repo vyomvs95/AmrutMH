@@ -4,7 +4,13 @@
 
 import fs from 'node:fs/promises'
 
-const SITE = process.env.SITE_URL || 'https://amrut-maharashtra.vercel.app'
+// Vercel exposes the real production domain at build time, so the sitemap
+// never hard-codes a guess. SITE_URL overrides once a custom domain exists.
+const SITE =
+  process.env.SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL &&
+    `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) ||
+  'http://localhost:5173'
 
 const content = JSON.parse(await fs.readFile('src/data/content.json', 'utf8'))
 const articles = JSON.parse(await fs.readFile('src/data/articles.json', 'utf8'))
