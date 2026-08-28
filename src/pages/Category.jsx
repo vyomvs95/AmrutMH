@@ -3,7 +3,8 @@ import { Link, useParams } from 'react-router-dom'
 import Reveal from '../components/Reveal'
 import { StoryFeature, StoryCard, RecordRow, CompactRow } from '../components/Cards'
 import { SchemeBand } from '../components/Scheme'
-import { categoryBySlug, categories } from '../lib/content'
+import CategoryRail from '../components/CategoryRail'
+import { categoryBySlug } from '../lib/content'
 import NotFound from './NotFound'
 
 function Crumb({ mr }) {
@@ -31,7 +32,6 @@ export default function Category() {
   if (!cat) return <NotFound />
 
   const [lead, ...rest] = cat.items
-  const siblings = categories.filter((c) => c.register === cat.register && c.slug !== cat.slug)
 
   return (
     <>
@@ -53,21 +53,9 @@ export default function Category() {
         </div>
       </section>
 
-      {/* Sibling rail — moving sideways within a register, which the
-          live site makes impossible once you leave the homepage. */}
-      <nav aria-label="संबंधित विभाग" className="border-b border-warm-200 bg-paper">
-        <div className="no-bar mx-auto flex max-w-[86rem] gap-6 overflow-x-auto px-5 py-3.5 sm:px-8">
-          {siblings.map((c) => (
-            <Link
-              key={c.slug}
-              to={`/${c.slug}`}
-              className="shrink-0 whitespace-nowrap text-[14.5px] font-semibold text-ink-2 transition-colors hover:text-saffron-deep"
-            >
-              <span className="underline-grow">{c.mr}</span>
-            </Link>
-          ))}
-        </div>
-      </nav>
+      {/* Same rail as the homepage, so the reader never loses the map —
+          and it sticks under the masthead once scrolled past. */}
+      <CategoryRail label="संबंधित विभाग" />
 
       <div className="mx-auto max-w-[86rem] px-5 py-14 sm:px-8 sm:py-20">
         {/* ---- People: editorial rhythm ---- */}
