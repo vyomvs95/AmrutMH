@@ -4,6 +4,7 @@ import Reveal from '../components/Reveal'
 import { StoryFeature, StoryCard, RecordRow, CompactRow } from '../components/Cards'
 import { SchemeBand } from '../components/Scheme'
 import CategoryRail from '../components/CategoryRail'
+import CountUp from '../components/CountUp'
 import { categoryBySlug } from '../lib/content'
 import NotFound from './NotFound'
 
@@ -46,7 +47,7 @@ export default function Category() {
               {cat.blurb && <p className="lede mt-3.5">{cat.blurb}</p>}
             </div>
             <p className="meta pb-2">
-              <span className="font-serif text-[1.6rem] leading-none text-saffron-deep">{cat.total}</span>
+              <CountUp to={cat.total} className="font-serif text-[1.6rem] leading-none text-saffron-deep" />
               <span className="ml-2">बातम्या</span>
             </p>
           </div>

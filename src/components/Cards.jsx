@@ -59,7 +59,7 @@ export function StoryCard({ item, showCat = false, priority = false }) {
   const image = leadImage(item)
 
   return (
-    <Wrap item={item} className="group flex h-full flex-col">
+    <Wrap item={item} className="lift group flex h-full flex-col">
       <div className="zoom-wrap mb-4 rounded-md bg-warm-100">
         <Img
           data={image}
@@ -94,7 +94,7 @@ export function RecordRow({ item, showCat = true }) {
   const image = leadImage(item)
 
   return (
-    <Wrap item={item} className="group flex gap-4 border-b border-warm-100 py-5 sm:gap-6">
+    <Wrap item={item} className="lift group flex gap-4 border-b border-warm-100 py-5 sm:gap-6">
       <div className="zoom-wrap w-24 shrink-0 rounded bg-warm-100 sm:w-36">
         <Img
           data={image}

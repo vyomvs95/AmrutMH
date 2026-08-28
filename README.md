@@ -67,6 +67,41 @@ pages.
 lifted out of the prose and set as contact details and a reference disclosure —
 same words, no longer read as part of the story.
 
+## Assistant
+
+A floating assistant answers scheme, eligibility, application, document,
+district-office and contact questions, and falls back to searching all 333
+collected stories.
+
+It is **grounded, not generative** — every answer is composed from this
+site's own content, so it cannot invent an eligibility rule or an office
+address. On a government portal that matters more than fluency. Where the
+portal genuinely does not publish something, it says so: ask for a district
+office and it gives Solapur, the only one with a published address, and
+points to the head office for the rest.
+
+`answer()` in `src/lib/assistant.js` is the single seam — putting a real
+model behind it is one change, plus a serverless route holding the key.
+
+## Opening sequence
+
+An octagonal seal in the Rajmudra tradition, drawn in saffron, resolving
+into the wordmark. Runs once per browser session, never under
+`prefers-reduced-motion`.
+
+It is a stylised interpretation, not a reproduction — the royal seal
+carries a specific Sanskrit shloka, and setting that by hand risks getting
+a revered inscription wrong. Official artwork drops straight into
+`Preloader.jsx` if the client supplies it.
+
+## Motion
+
+Scroll-progress hairline, route-change entrance, rotating hero with a slow
+push on the active frame, scroll-triggered reveals, card lift on hover, and
+counts that animate up when they scroll into view. All transform/opacity,
+no animation library, and every piece of it is dropped under
+`prefers-reduced-motion`.
+
 ## Performance
 
 The live homepage loads ~80 images, none lazily, none responsive, some at 18× their
