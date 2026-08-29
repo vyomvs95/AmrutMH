@@ -1,0 +1,483 @@
+════════════════════════════════════════════════════════════════════════
+  BUILD PROMPT — "अमृत महाराष्ट्र : माणसं"
+  A second, editorial-documentary version of the AMRUT Maharashtra portal
+  Copy everything below into a fresh Claude Code session and run it.
+════════════════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────────────────
+0.  WHAT YOU ARE BUILDING
+────────────────────────────────────────────────────────────────────────
+
+Build a NEW website at ~/Amrut_Manus (create it) — a second, parallel
+design of the Government of Maharashtra's AMRUT portal. There is already a
+first version at ~/Amrut_Maharashtra. DO NOT modify that one. Read from it,
+copy assets out of it, and otherwise leave it alone.
+
+This version has a different thesis. Where version one is a well-organised
+news portal, this one is a photo-documentary publication: Humans of New
+York's storytelling format, carried inside Ford Foundation's navigation and
+institutional restraint.
+
+The organisation: AMRUT — महाराष्ट्र संशोधन, उन्नती व प्रशिक्षण प्रबोधिनी —
+an autonomous body of the Government of Maharashtra. It serves economically
+weaker households in open-category communities that receive no other
+government corporation's benefit: 24 listed castes, annual household income
+under ₹8 lakh, offices in all 36 districts. The audience is largely rural,
+Marathi-speaking, on inexpensive Android phones and unreliable data.
+
+Marathi is the first language of this site. Not a translation of an English
+site — the English is the afterthought, if it exists at all.
+
+Deliver it deployed. Not a mockup, not a plan. Deployed, on a live URL,
+verified working.
+
+────────────────────────────────────────────────────────────────────────
+1.  BOOTSTRAP — GET THE CONTENT (do this first, it takes 2 minutes)
+────────────────────────────────────────────────────────────────────────
+
+All content and imagery is already collected and optimised. Copy it:
+
+    mkdir -p ~/Amrut_Manus/src/data ~/Amrut_Manus/public
+    cp ~/Amrut_Maharashtra/src/data/*.json ~/Amrut_Manus/src/data/
+    cp -R ~/Amrut_Maharashtra/public/img ~/Amrut_Manus/public/img
+
+That gives you 16 categories, 333 article records, 32 full article bodies,
+and 355 images already converted to responsive WebP at 400/800/1400
+(38 MB total; the 400w variants average 24 KB).
+
+DO NOT re-scrape amrutmaharashtra.org. The content is a snapshot from
+28 August 2026 and that is fine for this build.
+
+DATA SHAPES — exactly as they are on disk:
+
+  content.json
+    meta.palette   { saffron, deepOrange, footerOrange, cream1, cream2,
+                     peach, ink, grey }
+    meta.assets    { emblem, logoLeft, logoRight }   (paths into images.json)
+    meta.org       { mr, sub, title, email, phone, address, portal }
+    meta.districts [ 21 district names, mixed case, some underscored ]
+    schemes        { "<image path>": "<schemeId>|<label>" }
+    categories     { "<English key>": { mr, slug, total, items[] } }
+      items[]      { id, t (title), x (excerpt), im (image path),
+                     au (author), dt (date) }
+
+  articles.json    { "<id>": { id, cat, title, summary, body[] (paragraphs),
+                     images[], author, date, time, views, district,
+                     related[] } }
+
+  images.json      { "<original path>": [key, width, height, [widths]] }
+                   Resolve to: /img/{key}-{width}.webp
+
+  offices.json     { "solapur": { address, phone } }   ← only ONE office
+
+Write a lib that normalises all of this once. Do not scatter raw JSON
+access through components.
+
+────────────────────────────────────────────────────────────────────────
+2.  COMPLETE SITEMAP
+────────────────────────────────────────────────────────────────────────
+
+  /                                  Home — the documentary feed
+  /:catSlug                          Section index (16 of these)
+  /:catSlug/:id/:titleSlug           Story page
+  /schemes                           NEW — scheme directory
+  /schemes/:schemeId                 NEW — one scheme in full
+  /districts                         NEW — the 36-district directory
+  /about                             NEW — about AMRUT
+  /contact                           NEW — a contact page that works
+  *                                  404, in Marathi, inside the site
+
+The 16 sections — English key / Marathi label / URL slug / article count:
+
+  Amrut Events              अमृत घडामोडी        amrut-events              1261
+  Beneficiary Story         लाभार्थी स्टोरी       beneficiary-story          152
+  Blog                      ब्लॉग                blog                       110
+  Amrut Service             अमृत सेवाकार्य       amrut-service                5
+  Today Special             दिनविशेष             today-special              349
+  Successful Entrepreneur   यशस्वी उद्योजक       successful-entrepreneur     18
+  Words Amrut               शब्दामृत             words-amrut                215
+  Smart Farmer              स्मार्ट शेतकरी        smart-farmer                 7
+  Capable Student           सक्षम विद्यार्थी      capable-student             15
+  Spirituality              अध्यात्म             spirituality                27
+  Social Situation          सामाजिक परिवर्तक     social-situation            27
+  Women Power               स्त्रीशक्ती           women-power                 36
+  Tourism                   पर्यटन               tourism                    188
+  News                      वार्ता               news                        91
+  Articles                  लेख                  articles                   124
+  Govet_Schemes             शासकीय योजना         govet-schemes               39
+
+  Total published: 2,664.  You hold 24 per category in the snapshot.
+
+GROUP THEM INTO THREE STRANDS. This is the spine of the whole design:
+
+  माणसं  (People)   beneficiary-story, successful-entrepreneur,
+                    smart-farmer, capable-student, women-power,
+                    social-situation
+                    → Full documentary treatment. This is the site's heart.
+
+  संस्था  (Record)   govet-schemes, news, amrut-events, amrut-service
+                    → Institutional. Dense, factual, quick to scan.
+
+  संचित  (Archive)  blog, articles, words-amrut, today-special,
+                    spirituality, tourism
+                    → Essays, tradition, places. Text-forward.
+
+────────────────────────────────────────────────────────────────────────
+3.  CONTENT INVENTORY — every fact you need
+────────────────────────────────────────────────────────────────────────
+
+ORGANISATION
+  Marathi name   महाराष्ट्र संशोधन, उन्नती व प्रशिक्षण प्रबोधिनी (अमृत)
+  Descriptor     महाराष्ट्र शासनाची स्वायत्त संस्था
+  Portal title   अमृत महाराष्ट्र
+  Managing Dir.  श्री. विजय जोशी
+  Email          amrutmaharashtraorg@gmail.com
+  Phone          +91 9112226524
+  Address        AMRUT Building, near Bhimsen Joshi Sabhagruh, Ward No. 8,
+                 PMRDA, Aundh, Pune, Maharashtra 411067
+  Official site  https://mahaamrut.org.in/
+
+ELIGIBILITY (stated verbatim across the archive — do not paraphrase it
+into something stronger or weaker than this)
+  · Open-category castes receiving no other government corporation benefit
+  · Annual household income under ₹8 lakh
+  · Resident of Maharashtra
+  · 24 listed castes: ब्राह्मण, कायस्थ, कोमटी/वैश्य, मारवाडी, पटेल, राजपूत,
+    यलमार, अय्यंगार, राजपुरोहित, पाटीदार, नायर, नायडू, कम्मा, कानबी, सिंधी,
+    बनिया, बंगाली, त्यागी, सेनगुनथर, गुजराथी, जाट, लोहाना, हिंदू नेपाळी,
+    भूमिहार
+
+THE FOUR LIVE SCHEMES — deep-link each to the application portal
+  146   वैयक्तिक व्याज परतावा योजना    Refund of interest on business loans
+  245   रिमोट ड्रोन प्रशिक्षण          Drone skills for farming and survey
+  263   अमृत बेकरी प्रशिक्षण           Free bakery business training
+  264   सूर्यमित्र सोलार प्रशिक्षण      Residential solar technology training
+
+  Apply URL: https://app.mahaamrut.org.in/amrut-new/scheme/{id}
+  Banner artwork for each is in content.json → schemes, already optimised.
+  All four banners are 2.5:1 — crop to aspect-[5/2] or the baked-in text
+  gets cut.
+
+DISTRICTS NAMED IN THE ARCHIVE (21 of the 36; normalise casing, render in
+Marathi)
+  अहिल्यानगर, अकोला, अमरावती, भंडारा, बुलढाणा, छत्रपती संभाजीनगर, धाराशिव,
+  गडचिरोली, गोंदिया, हिंगोली, जळगाव, जालना, कोल्हापूर, नागपूर, नांदेड,
+  नाशिक, पुणे, सातारा, सोलापूर, वर्धा, यवतमाळ
+
+  ⚠ Only SOLAPUR has a published office address (in offices.json). The
+  portal genuinely does not publish the other 35. Say so on /districts.
+  Do NOT invent addresses. Show Solapur in full, list the rest as known
+  districts, and point to the head office for those.
+
+PALETTE — AMRUT's own, read out of their live stylesheet. NON-NEGOTIABLE.
+  #F97316  saffron        the accent
+  #D35400  deep orange    links, text-safe on cream
+  #FF6600  footer orange
+  #FFF7ED  cream          warm ground
+  #FFEDD5  cream 2        panels
+  #FFE4CC  peach          hairlines on cream
+  #212529  ink            type
+
+  You may add a warm-biased neutral ramp. You may NOT introduce a new hue.
+
+IDENTITY ASSETS (paths resolve through images.json)
+  components/assets/india_transperent.png   State Emblem of India
+  components/assets/Amrutmh.png             अमृत महाराष्ट्र wordmark
+  components/assets/Amrut.jpeg              AMRUT institutional mark
+
+  The emblem and both marks must appear. This is an official government
+  site and that identity is not yours to drop.
+
+────────────────────────────────────────────────────────────────────────
+4.  DESIGN DIRECTION
+────────────────────────────────────────────────────────────────────────
+
+REFERENCE A — Humans of New York (the storytelling format)
+  One person. One photograph, large. Their words. No competing furniture.
+  Stories arrive one at a time and you scroll through lives, not a grid of
+  cards. Take the FORMAT and the pacing.
+
+REFERENCE B — Ford Foundation (navigation and institutional bearing)
+  A confident full-overlay menu with generous space and real typographic
+  hierarchy. Motion that is orchestrated rather than sprinkled. The feeling
+  that a serious institution made this. Take the NAVIGATION, the SPACING,
+  and the RESTRAINT.
+
+  Do not copy either site. Take the thinking, make your own thing.
+
+⚠ THE CONSTRAINT THAT WILL BITE YOU — read this before designing
+
+  HONY works because every post is the subject's own first-person voice.
+  These articles are written in third-person official register: "कुलकर्णी
+  यांनी अमृत संस्थेचे मनापासून आभार मानले आहेत."
+
+  You may NOT rewrite the articles. Content is fixed.
+
+  I checked: only 8 of the 32 full articles contain direct quoted speech,
+  and some of those are historical quotations or product names, not
+  testimony. So roughly 1 in 5 stories can carry a genuine first-person
+  pull quote.
+
+  Handle it like this:
+    · Where quoted Marathi speech of 40+ characters exists in the body,
+      extract it and set it as a large display pull quote with attribution.
+      That IS the HONY moment and it is real.
+    · Where it does not, fall back to the article's own `summary` field,
+      set as a standfirst — clearly editorial, NOT dressed up as a quote.
+    · Never fabricate a quote. Never attribute words to a person that they
+      are not recorded as saying. This is a government site about real,
+      named, poor people. Getting this wrong is the worst thing you could do.
+
+⚠ THE PHOTOGRAPHY CEILING — the real limit on this design
+
+  The source imagery is uneven: group shots of twenty people holding
+  certificates under fluorescent light, GPS-camera watermarks burned into
+  frames, event posters photographed as images, mixed aspect ratios.
+
+  A full-bleed portrait format is merciless with weak photography. Design
+  around it:
+    · A strong scrim/gradient from the ink colour over every hero image.
+      It makes an ordinary frame read as deliberate and guarantees text
+      legibility over anything.
+    · Detect portrait vs landscape from images.json (width/height) and
+      choose the crop and layout per image rather than forcing one ratio.
+    · Prefer images whose aspect suits the slot; fall back gracefully.
+    · Duotone or a warm colour-grade over weak frames is legitimate and
+      will unify the library considerably. Use canvas or CSS blend modes.
+
+TYPOGRAPHY — Google Fonts only, and it must be built for Devanagari
+  Display / story text:  "Tiro Devanagari Marathi"  (a Marathi-specific serif)
+  Interface / metadata:  "Mukta"  (Ek Type, Mumbai)
+  Optional third for large display: "Anek Devanagari" (variable) or
+  "Rozha One" (high-contrast, use sparingly)
+
+  Devanagari typesetting rules — most sites get these wrong, do not:
+    · Body line-height 1.85–1.95, NOT the 1.5 a Latin face takes. Matras
+      sit above and below the shirorekha and need the room.
+    · Letter-spacing 0 or slightly negative. Never positive — it breaks
+      the headline stroke.
+    · NEVER uppercase. It does not exist in Devanagari, and Latin caps set
+      beside it read as a foreign object. Use size, weight and colour for
+      hierarchy instead.
+    · Reading measure ~34rem (~62 Devanagari characters).
+
+COLOUR DISCIPLINE
+  The live site runs saffron at full strength on the header, nav, buttons,
+  headings and links simultaneously, so nothing leads. Keep the exact same
+  hues and cut saffron to roughly 5% of the surface — spend it once per
+  screen, on the single thing you most want the reader to do.
+
+  Light theme only, committed and painted explicitly. The cream-and-saffron
+  identity does not survive inversion and this is read in daylight.
+
+────────────────────────────────────────────────────────────────────────
+5.  MOTION — the brief asks for this to be graphical and alive
+────────────────────────────────────────────────────────────────────────
+
+Rules that override everything below:
+  · Transform and opacity only. No layout-thrashing properties.
+  · No animation library. CSS + IntersectionObserver + rAF is enough.
+  · EVERY effect must be disabled under `prefers-reduced-motion: reduce`,
+    and the page must still be complete and correct without it.
+  · The audience is on cheap Android hardware. If an effect costs frames,
+    cut it. Test that scrolling stays smooth.
+
+Build these:
+
+  1. OPENING SEQUENCE (once per session, sessionStorage-gated)
+     Saffron on ink. An octagonal seal in the Rajmudra tradition drawing
+     itself via stroke-dashoffset, a radiating sun fanning out, then the
+     अमृत महाराष्ट्र wordmark rising. ~2.5s, then fade.
+     ⚠ Stylised interpretation only — the real राजमुद्रा carries a specific
+     Sanskrit shloka and hand-setting it risks getting a revered
+     inscription wrong. Leave a clean seam to drop official artwork in.
+
+  2. STORY FEED — the signature interaction
+     Each story occupies a full viewport section. As you scroll:
+       · the photograph parallaxes slowly against the text
+       · the pull quote / standfirst rises and fades in, staggered by line
+       · the previous story's image dims and desaturates as it leaves
+     Use IntersectionObserver, not scroll listeners, for the triggers.
+
+  3. NAVIGATION OVERLAY (Ford Foundation register)
+     Full-screen. Section names in large display type, staggered entrance
+     ~45ms apart, grouped by the three strands. A live scheme panel pinned
+     in the corner. Escape closes. Focus is trapped while open.
+
+  4. NUMBER COUNTERS
+     Article counts and district counts animate up on entry.
+     ⚠ CRITICAL: a stalled counter shows a FALSE number. rAF stops in a
+     background tab. So: never leave the true value until the animation
+     actually begins, always set a hard timeout that lands the real figure,
+     and snap to it on visibilitychange. The live site's fake visitor
+     counter is the single worst thing about it — do not ship a number
+     that can lie.
+
+  5. IMAGE ENTRANCE
+     Fade + slight scale-down from a warm placeholder. Check
+     `img.complete` on mount or cached images stay invisible forever.
+
+  6. SCROLL PROGRESS
+     A hairline saffron bar at the top of the viewport.
+
+  7. MAGNETIC / LIFT HOVER
+     Cards and scheme tiles lift 4px on hover with a soft shadow.
+     Pointer-fine media queries only — do not do this on touch.
+
+  8. ROUTE TRANSITION
+     Content fades and rises ~10px on navigation. Keyed on pathname.
+
+  9. DISTRICT MAP (if you have the appetite)
+     /districts with an SVG Maharashtra outline, districts we have stories
+     from lighting up in saffron on hover, the rest muted. Purely
+     decorative enhancement over an accessible list — the list must work
+     with the SVG absent.
+
+────────────────────────────────────────────────────────────────────────
+6.  PAGE SPECIFICATIONS
+────────────────────────────────────────────────────────────────────────
+
+HOME — the documentary feed
+  · Slim government identity strip (emblem + org name). Quiet, ~28px.
+  · Masthead ~64px: wordmark left, AMRUT mark right, menu trigger.
+  · Opening: ONE story, full viewport, full-bleed photograph, scrim,
+    Marathi headline at clamp(2rem, 5vw, 4rem), the pull quote if one
+    exists, attribution, one saffron call to action.
+  · Then the feed: 6–8 stories, one per viewport section, alternating
+    composition so it has a pulse. This is the HONY stretch.
+  · A saffron scheme band — the four live schemes, real banner artwork,
+    2.5:1 crops, deep-linked to the application portal. This is where the
+    saffron is spent.
+  · The Record strand: dense, two-column, scannable.
+  · The Archive strand: text-forward, minimal imagery.
+  · District band leading to /districts.
+  · Footer with the real contact details and the official declarations.
+
+SECTION INDEX (/:catSlug)
+  Header names the section, its Marathi blurb, and an animated count.
+  Layout switches by strand: People gets the documentary rhythm, Record a
+  dense list, Archive a reading list. Persistent section rail — sticky
+  under the masthead, with edge fades and arrows when it overflows, and
+  the current section scrolled into view.
+  State honestly how many of the total are shown in this build.
+
+STORY PAGE
+  · Breadcrumb → full-bleed hero, scrim, headline overlaid
+  · Pull quote or standfirst, set large
+  · Body at the Devanagari measure, 1.9 line-height
+  · Marginal rail: author, date, district, views
+  · ⚠ THE BRIDGE — the most important component on the site.
+    Every story on the live site ends by telling the reader they may
+    qualify, then abandons them. Match the story to the scheme it
+    describes from the article's own words (व्याज परतावा → 146,
+    सोलार/सूर्यमित्र → 264, बेकरी → 263, ड्रोन → 245) and show: what it is,
+    who qualifies, the income limit, the district office, the helpline,
+    and a button into the application portal.
+    No article text changes. This is a new component placed after it.
+  · The repeated "अमृत संस्थेविषयी" boilerplate and the office address are
+    identical across the archive — lift them out of the prose and give
+    them their own treatment. Same words, no longer read as story.
+  · Related stories.
+
+/schemes and /schemes/:id      Directory + one page per scheme: eligibility,
+                               documents, deadlines, apply link, and the
+                               real beneficiary stories about it.
+/districts                     36 districts. Solapur in full. Honest about
+                               the other 35.
+/about                         Who AMRUT is, the target group, the MD.
+/contact                       A page that actually exists. The live site's
+                               contact button is wired to javascript:void(0)
+                               and goes nowhere.
+404                            In Marathi, inside the site, listing all 16
+                               sections. Never a stock template.
+
+────────────────────────────────────────────────────────────────────────
+7.  TECHNICAL
+────────────────────────────────────────────────────────────────────────
+
+  Vite + React 19 + Tailwind 4 + React Router 7. Plain JS, not TypeScript.
+  vercel.json with an SPA rewrite: /(.*) → /index.html
+  <html lang="mr">, real per-page <title> and meta description in Marathi.
+  Generate robots.txt and sitemap.xml at build (read the real production
+  domain from VERCEL_PROJECT_PRODUCTION_URL, do not hard-code a guess).
+  Open Graph tags — WhatsApp is how this content actually travels.
+  Code-split the article route; the 32 bodies are ~255 KB and a homepage
+  visitor should never load them.
+  Images: srcset across 400/800/1400, lazy below the fold, explicit
+  width/height to prevent layout shift.
+  Accessibility: skip link, visible focus states, semantic landmarks, alt
+  text, keyboard-operable overlay with focus trapping, no keyboard traps.
+
+TRAPS ALREADY HIT ON VERSION ONE — do not rediscover these
+
+  · Unlayered CSS beats Tailwind utilities. A bare `a { color: inherit }`
+    silently kills every colour utility on links. Base element styles go in
+    @layer base, custom classes in @layer components.
+  · Cached images never fire onLoad. Check `ref.current.complete` on mount
+    or anything in cache sits at opacity 0 forever.
+  · React StrictMode double-invokes effects in dev. Write "already seen"
+    flags when a sequence FINISHES, not when it starts, or the second pass
+    skips it.
+  · A catch-all `/:catSlug` route swallows unknown URLs. Category and
+    Article must render <NotFound />, not redirect home, or the 404 is
+    unreachable.
+  · Chrome auto-translates the site to English because lang="mr". Inject
+    <meta name="google" content="notranslate"> before taking screenshots.
+  · Scheme banners are 2.5:1 with text baked in. Any other crop cuts words.
+
+────────────────────────────────────────────────────────────────────────
+8.  SHIP IT
+────────────────────────────────────────────────────────────────────────
+
+  1. git init, commit.
+  2. Ask the user to create an empty private GitHub repo and give you the
+     SSH URL. SSH already works on this machine as `vyomvs95` —
+     `ssh -T git@github.com` confirms it. NEVER ask for or handle a
+     GitHub token.
+  3. Push to main.
+  4. Deploy via the Vercel dashboard (the user is signed in to vercel.com
+     in Chrome; the Vercel CLI is logged out and does not need to be).
+     Team: Empty Agency. Import the repo → it auto-detects Vite → Deploy.
+     From then on every push to main redeploys automatically.
+  5. VERIFY ON THE LIVE URL, not localhost: every route returns 200,
+     robots.txt and sitemap.xml serve, the bridge renders, the assistant
+     or search works, and the bundle is reported.
+  6. Tell the user what you could not verify. Mobile especially — window
+     resizing does not change the rendered viewport in this environment,
+     so mobile layout cannot be confirmed from here. Say so plainly rather
+     than claiming it works.
+
+────────────────────────────────────────────────────────────────────────
+9.  NON-NEGOTIABLE
+────────────────────────────────────────────────────────────────────────
+
+  ✗ Do not change a single word of any article.
+  ✗ Do not invent a quote, an office address, a deadline, a document
+    requirement, or an eligibility rule. Where the portal does not publish
+    something, say that it does not.
+  ✗ Do not introduce a colour outside the AMRUT palette.
+  ✗ Do not drop the State Emblem or either AMRUT mark.
+  ✗ Do not use placeholder text or stock imagery anywhere.
+  ✗ Do not modify ~/Amrut_Maharashtra.
+  ✓ Marathi first, everywhere.
+  ✓ Every animation degrades cleanly under prefers-reduced-motion.
+  ✓ Fast on a cheap phone on bad data. That is the actual user.
+
+────────────────────────────────────────────────────────────────────────
+10.  HOW TO JUDGE WHETHER IT WORKED
+────────────────────────────────────────────────────────────────────────
+
+  A farmer in Jalna opens this on a ₹8,000 phone over 3G. It loads fast.
+  He recognises a person like himself in the first photograph. He reads a
+  story in Marathi that is set well enough that reading is pleasant. At
+  the end, instead of being told to go find a district office, he is shown
+  the exact scheme that story was about, what it takes to qualify, and a
+  way in.
+
+  That is the whole test. Everything else is in service of it.
+
+  Reference for context if useful: the audit of the live site is at
+  ~/Amrut_Maharashtra/docs/site-audit.html and the prior build's decisions
+  and gotchas are in ~/Amrut_Maharashtra/PROJECT_LOG.md.
+
+════════════════════════════════════════════════════════════════════════
