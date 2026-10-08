@@ -249,6 +249,13 @@ async function act(j, token, what, extra = {}) {
     body: new URLSearchParams({ _csrf: csrfFrom(editPage), move: lineId, dir: 'up' }),
   })).status, 404)
 
+  console.log('\nthe visitor count')
+  const first = (await (await fetch(`${API}/visits`)).json()).visits
+  ok('a figure is carried over', first > 0, true)
+  const counted = (await (await fetch(`${API}/visit`, { method: 'POST' })).json()).visits
+  ok('a visit counts one', counted, first + 1)
+  ok('reading it does not count', (await (await fetch(`${API}/visits`)).json()).visits, counted)
+
   console.log(`\n${pass} passed, ${fail} failed\n`)
   process.exit(fail ? 1 : 0)
 })().catch((e) => { console.error('\nsmoke run broke:', e.message); process.exit(1) })

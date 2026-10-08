@@ -143,3 +143,34 @@ export function tickerLines() {
   }
   return tickerPromise
 }
+
+/**
+ * The running visitor total, carried on from the existing portal.
+ *
+ * Same meaning the live site uses — every visit, not unique people — so the
+ * two numbers can be read side by side. Visiting counts one; if the office is
+ * not reachable the carried-over figure in public/data/visits.json is shown
+ * without counting, rather than a number invented in the browser.
+ */
+let visitsPromise = null
+
+export function siteVisits() {
+  if (!visitsPromise) {
+    visitsPromise = (async () => {
+      if (API) {
+        try {
+          const r = await fetch(`${API}/visit`, { method: 'POST' })
+          if (r.ok) return (await r.json()).visits
+        } catch { /* fall through to the carried figure */ }
+      }
+      try {
+        const r = await fetch('/data/visits.json')
+        if (r.ok && (r.headers.get('content-type') || '').includes('json')) {
+          return (await r.json()).visits
+        }
+      } catch { /* no figure to show */ }
+      return null
+    })()
+  }
+  return visitsPromise
+}

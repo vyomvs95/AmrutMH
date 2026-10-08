@@ -106,6 +106,16 @@ async function handle(req, res, route, url) {
       json(res, 200, { ok: true })
       return true
     }
+    /* a visit to the site. Same meaning the existing portal uses: every
+       visit, not unique people — so the two numbers can be compared. */
+    if (route === '/api/visit') {
+      await db.run('UPDATE site_counters SET value = value + 1, updated_at = ? WHERE name = ?',
+        [new Date().toISOString(), 'visits'])
+      const row = await db.get('SELECT value FROM site_counters WHERE name = ?', ['visits'])
+      json(res, 200, { visits: Number(row ? row.value : 0) })
+      return true
+    }
+
     const clicked = route.match(/^\/api\/ads\/([A-Za-z0-9_-]{1,40})\/click$/)
     if (clicked) {
       await counter.click(clicked[1], 'ad')
@@ -166,6 +176,12 @@ async function handle(req, res, route, url) {
       body: paragraphs(r.body),
       related: related.map((x) => ({ id: x.public_id, t: x.title, x: summarise(x.body) })),
     })
+    return true
+  }
+
+  if (route === '/api/visits') {
+    const row = await db.get('SELECT value FROM site_counters WHERE name = ?', ['visits'])
+    json(res, 200, { visits: Number(row ? row.value : 0) })
     return true
   }
 

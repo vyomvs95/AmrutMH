@@ -208,6 +208,20 @@ office can open that screen.
 The portal reads them from `/api/ticker`, or from `public/data/ticker.json` when
 the office is not reachable, so the band works either way.
 
+## The visitor count
+
+The portal shows a running visitor total above the footer. It **carries on from
+the count the existing site already shows** — 4,27,786 on 9 October 2026 — and
+counts the same thing that site counts: every visit, not unique people, so the
+two figures can be read side by side.
+
+`node db/seed-visits.js` sets the starting figure; pass a number to re-align it
+with the live site later. The portal reads it from `/api/visit`, which counts
+one and returns the new total. With the office unreachable it shows the carried
+figure from `public/data/visits.json` **without counting** — a number is never
+invented in the browser, which is exactly what the audit caught the old counter
+doing.
+
 ## Analytics (section C)
 
 Every read is counted twice over: **all views** (what an advertiser is buying)
