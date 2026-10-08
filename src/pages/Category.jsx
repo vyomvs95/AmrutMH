@@ -136,8 +136,12 @@ export default function Category() {
         )}
 
         <div className="mt-14 flex flex-col items-center gap-4 border-t border-warm-100 pt-8">
+          {/* The two numbers are marked untranslatable: a page translator
+              freezes the text it has claimed, which left this stuck at 24
+              however many times "more" was pressed. */}
           <p className="meta text-warm-400">
-            {total} पैकी {Math.min(shown, total)} बातम्या दाखवल्या आहेत
+            <span translate="no">{total}</span> पैकी{' '}
+            <span translate="no">{Math.min(shown, total)}</span> बातम्या दाखवल्या आहेत
           </p>
           {shown < total && (
             <button

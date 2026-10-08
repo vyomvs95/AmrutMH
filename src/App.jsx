@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import VisitorCount from './components/VisitorCount'
 import Preloader from './components/Preloader'
 import ScrollProgress from './components/ScrollProgress'
 import Assistant from './components/Assistant'
@@ -46,6 +47,7 @@ export default function App() {
         </Suspense>
       </main>
 
+      <VisitorCount />
       <Footer />
       <Assistant />
     </>
