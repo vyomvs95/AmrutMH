@@ -28,7 +28,7 @@ function Links({ items }) {
 
 export default function Footer() {
   return (
-    <footer className="mt-24 bg-ink text-cream">
+    <footer className="bg-ink text-cream">
       <div className="mx-auto max-w-[86rem] px-5 py-16 sm:px-8 sm:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.5fr] lg:gap-10">
           <div>
