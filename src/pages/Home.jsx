@@ -135,7 +135,7 @@ export default function Home() {
                   <Link to={`/${c.slug}`} className="font-serif text-[1.2rem] leading-snug text-ink transition-colors hover:text-saffron-deep">
                     <span className="underline-grow">{c.mr}</span>
                   </Link>
-                  <span className="meta shrink-0 text-warm-400">{c.total}</span>
+                  <span translate="no" className="meta shrink-0 text-warm-400">{c.total}</span>
                 </div>
                 <div>
                   {c.items.slice(0, 4).map((item) => (

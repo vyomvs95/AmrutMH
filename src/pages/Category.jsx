@@ -136,12 +136,12 @@ export default function Category() {
         )}
 
         <div className="mt-14 flex flex-col items-center gap-4 border-t border-warm-100 pt-8">
-          {/* The two numbers are marked untranslatable: a page translator
-              freezes the text it has claimed, which left this stuck at 24
-              however many times "more" was pressed. */}
+          {/* One untranslatable chunk, shown-first: a page translator reorders
+              the words around a protected span and ran the two numbers
+              together — "218Of 24News". Kept as a single "24 / 218" it reads
+              correctly whatever language the page is being read in. */}
           <p className="meta text-warm-400">
-            <span translate="no">{total}</span> पैकी{' '}
-            <span translate="no">{Math.min(shown, total)}</span> बातम्या दाखवल्या आहेत
+            <span translate="no">{Math.min(shown, total)} / {total}</span> बातम्या दाखवल्या आहेत
           </p>
           {shown < total && (
             <button
