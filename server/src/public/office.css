@@ -208,3 +208,31 @@ th a.sortable:hover .caret{opacity:.9}
 .spark-col:nth-last-child(-n+3) .spark-tip{left:auto;right:0;transform:none}
 .spark-bar{transition:filter .12s ease}
 .spark-col:hover .spark-bar{filter:brightness(.94)}
+
+/* ---- the scrolling band editor ---- */
+.tick-preview{background:var(--deep);border-radius:8px;overflow:hidden;padding:.55rem 0}
+.tick-strip{display:flex;gap:.9rem;align-items:center;white-space:nowrap;overflow-x:auto;
+  padding:0 .9rem;color:#fff;font-size:.9rem;scrollbar-width:none}
+.tick-strip::-webkit-scrollbar{display:none}
+.tick-sep{opacity:.55}
+.tick-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.4rem}
+.tick-row{display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;background:var(--cream1);
+  border:1px solid var(--line);border-radius:8px}
+.tick-row.dragging{opacity:.45;border-style:dashed}
+.tick-row.editing{display:block;background:var(--white);border-color:var(--saffron)}
+.tick-grip{cursor:grab;color:var(--warn);font-size:1rem;line-height:1;user-select:none}
+.tick-no{width:1.4rem;text-align:center;color:var(--muted);font-size:.8rem}
+.tick-text{flex:1;min-width:0}
+.tick-text b{display:block;font-weight:500;font-size:.95rem}
+.tick-link{display:block;font-family:ui-monospace,Menlo,monospace;font-size:.74rem;color:var(--muted);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tick-move{display:flex;gap:.2rem}
+.tick-move form{width:auto;margin:0}
+.tick-move button{width:auto;padding:.15rem .45rem;font-size:.78rem;background:var(--white);
+  color:var(--ink);border:1px solid var(--line)}
+.tick-move button:hover{background:var(--cream2);border-color:var(--saffron)}
+.tick-edit{font-size:.84rem;white-space:nowrap}
+.tick-check{display:flex;align-items:center;gap:.45rem;font-weight:400;margin:.2rem 0 1rem}
+.tick-check input{width:auto;margin:0}
+.tick-actions{display:flex;gap:.8rem;align-items:center}
+.tick-actions button{width:auto;padding:.45rem 1rem}

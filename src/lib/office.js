@@ -115,3 +115,31 @@ export function reportView(id) {
     else fetch(url, { method: 'POST', keepalive: true }).catch(() => {})
   } catch { /* counting must never break a page */ }
 }
+
+/**
+ * The six lines that scroll in the band under the navigation.
+ *
+ * Same three-step fallback as everything else here: the office when it is
+ * reachable, then a file committed into the site, then nothing — in which case
+ * the band simply does not appear.
+ */
+let tickerPromise = null
+
+export function tickerLines() {
+  if (!tickerPromise) {
+    tickerPromise = (async () => {
+      if (API) {
+        try {
+          const r = await fetch(`${API}/ticker`)
+          if (r.ok) return await r.json()
+        } catch { /* fall through to the file */ }
+      }
+      try {
+        const r = await fetch('/data/ticker.json')
+        if (r.ok && (r.headers.get('content-type') || '').includes('json')) return await r.json()
+      } catch { /* no band set up */ }
+      return []
+    })()
+  }
+  return tickerPromise
+}

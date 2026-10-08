@@ -93,6 +93,13 @@ const summarise = (b) => { const f = paragraphs(b)[0] || ''; return f.length > 2
     })
   }
 
+  /* the six scrolling lines, written where the portal looks for them */
+  const ticker = await db.all(
+    'SELECT public_id, text_mr, link_url FROM ticker_items WHERE is_active = 1 ORDER BY position, id')
+  fs.writeFileSync(path.join(outDir, '..', 'ticker.json'),
+    JSON.stringify(ticker.map((t) => ({ id: t.public_id, text: t.text_mr, href: t.link_url || null }))))
+  console.log(`${ticker.length} scrolling line(s) -> ticker.json`)
+
   fs.writeFileSync(path.join(outDir, 'office-stories.json'),
     JSON.stringify({ generated: new Date().toISOString(), count: index.length, items: index }, null, 0))
 

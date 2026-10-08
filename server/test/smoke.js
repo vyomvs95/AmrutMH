@@ -218,6 +218,37 @@ async function act(j, token, what, extra = {}) {
   ok('CSV download works', (await visit(ed.j, `${OFFICE}/analytics.csv?days=7`)).status, 200)
   ok('a coordinator sees analytics too', (await visit(di.j, `${OFFICE}/analytics`)).status, 200)
 
+  console.log('\nthe scrolling band')
+  ok('only the head office may open it', (await visit(di.j, OFFICE + '/ticker')).status, 404)
+  ok('nor the divisional head', (await visit(dv.j, OFFICE + '/ticker')).status, 404)
+  const tick = await visit(ed.j, OFFICE + '/ticker')
+  ok('head office may', tick.status, 200)
+  const tickHtml = await tick.text()
+  const lineId = (tickHtml.match(/\/ticker\?edit=([A-Za-z0-9_-]{28})/) || [])[1]
+  ok('six lines are set up', (await (await fetch(`${API}/ticker`)).json()).length, 6)
+  const editPage = await (await visit(ed.j, `${OFFICE}/ticker?edit=${lineId}`)).text()
+  const saved = await visit(ed.j, `${OFFICE}/ticker/${lineId}/save`, {
+    method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ _csrf: csrfFrom(editPage), text_mr: 'चाचणी ओळ', link_url: '/govet-schemes', is_active: '1' }),
+  })
+  ok('a line can be edited', saved.status, 302)
+  ok('and the portal sees it', (await (await fetch(`${API}/ticker`)).json()).some((l) => l.text === 'चाचणी ओळ'), true)
+  /* a link that is neither a path nor a web address must be refused */
+  const bad = await visit(ed.j, `${OFFICE}/ticker/${lineId}/save`, {
+    method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ _csrf: csrfFrom(editPage), text_mr: 'चाचणी ओळ', link_url: 'javascript:alert(1)', is_active: '1' }),
+  })
+  ok('a dangerous link is dropped', (await (await fetch(`${API}/ticker`)).json()).find((l) => l.text === 'चाचणी ओळ').href, 'null')
+  const reordered = await visit(ed.j, `${OFFICE}/ticker/reorder`, {
+    method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ _csrf: csrfFrom(editPage), move: lineId, dir: 'down' }),
+  })
+  ok('lines can be reordered', reordered.status, 302)
+  ok('district cannot reorder', (await visit(di.j, `${OFFICE}/ticker/reorder`, {
+    method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ _csrf: csrfFrom(editPage), move: lineId, dir: 'up' }),
+  })).status, 404)
+
   console.log(`\n${pass} passed, ${fail} failed\n`)
   process.exit(fail ? 1 : 0)
 })().catch((e) => { console.error('\nsmoke run broke:', e.message); process.exit(1) })

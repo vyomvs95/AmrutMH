@@ -169,6 +169,14 @@ async function handle(req, res, route, url) {
     return true
   }
 
+  /* the six lines that scroll under the navigation */
+  if (route === '/api/ticker') {
+    const rows = await db.all(
+      'SELECT public_id, text_mr, link_url FROM ticker_items WHERE is_active = 1 ORDER BY position, id')
+    json(res, 200, rows.map((r) => ({ id: r.public_id, text: r.text_mr, href: r.link_url || null })))
+    return true
+  }
+
   /* advertisements that are running right now, for one placement */
   if (route === '/api/ads') {
     const slot = url.searchParams.get('slot')

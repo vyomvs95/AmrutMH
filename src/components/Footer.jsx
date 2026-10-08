@@ -33,11 +33,15 @@ export default function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.5fr] lg:gap-10">
           <div>
             {logoLeft && (
+              /* The mark is a full-colour wordmark — orange swoosh, white panel,
+                 Devanagari in both. Forcing it white flattened it to a blob, so
+                 it is shown as it is; it reads cleanly on the ink background. */
               <img
                 src={logoLeft.src}
+                srcSet={logoLeft.srcSet}
+                sizes="176px"
                 alt="अमृत महाराष्ट्र"
                 className="h-11 w-auto"
-                style={{ filter: 'brightness(0) invert(1)' }}
               />
             )}
             <p className="mt-5 max-w-xs font-serif text-[1.0625rem] leading-relaxed text-cream/80">

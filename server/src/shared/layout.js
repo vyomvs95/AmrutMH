@@ -41,6 +41,7 @@ function nav(user, active) {
     ['/review', 'तपासणीसाठी', 'Review', user.role !== 'district'],
     ['/ads', 'जाहिराती', 'Advertising', true],
     ['/analytics', 'आकडेवारी', 'Analytics', true],
+    ['/ticker', 'बातमीपट्टी', 'Ticker', user.role === 'editor'],
     ['/users', 'वापरकर्ते', 'People', user.role === 'editor'],
     ['/account', 'माझे खाते', 'Account', true],
   ].filter((i) => i[3])

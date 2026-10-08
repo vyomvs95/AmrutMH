@@ -25,6 +25,7 @@ const editorial = require('./modules/editorial/routes')
 const people = require('./modules/people/routes')
 const advertising = require('./modules/advertising/routes')
 const analytics = require('./modules/analytics/routes')
+const ticker = require('./modules/ticker/routes')
 
 const B = config.basePath
 const notFound = (res) => send(res, 404, office.views.notFound())
@@ -75,7 +76,7 @@ async function handle(req, res) {
   if (!user) return send(res, 302, '', { location: B + '/login' })
   user.csrf = csrf
 
-  for (const mod of [office, editorial, people, advertising, analytics]) {
+  for (const mod of [office, editorial, people, advertising, analytics, ticker]) {
     if (await mod.handle(ctx)) return
   }
   return notFound(res)

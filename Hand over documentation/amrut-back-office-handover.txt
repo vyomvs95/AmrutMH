@@ -101,10 +101,19 @@ a divisional head above every group of districts, and the head office above them
 3.5 आकडेवारी · Analytics
   Described in full in section 6.
 
-3.6 वापरकर्ते · People   (head office only)
+3.6 बातमीपट्टी · Ticker   (head office only)
+  The band of six scrolling lines under the portal's navigation.
+  The screen shows the band exactly as the portal draws it, then the six lines
+  below. One line is edited at a time — its words, its link, and whether it is
+  shown. Drag a line to change its place in the order, or use the arrows beside
+  it. A link must be a path inside the portal (/govet-schemes) or a full web
+  address; anything else is refused.
+  The portal picks a change up immediately — no rebuild, no deploy.
+
+3.7 वापरकर्ते · People   (head office only)
   Every account, its level and its district or division. Read-only today.
 
-3.7 माझे खाते · Account
+3.8 माझे खाते · Account
   Your own name, e-mail, level and location.
 
 --------------------------------------------------------------------------------
@@ -228,6 +237,7 @@ staff detail in any reply.
   GET /api/img/<id>?w=400|800|1400  a story photograph at that width
   GET /api/ads?slot=                advertisements running right now
   GET /api/ads/img/<id>?w=          the artwork of a running advertisement
+  GET /api/ticker                   the six scrolling lines, in order
   POST /api/view/<id>               records that a story was read
   POST /api/ads/<id>/click          records a click on an advertisement
 
@@ -332,6 +342,7 @@ PostgreSQL in production.
         people/           the accounts that may use the office
         advertising/      placements, rate card, advertisements, payments
         analytics/        what is read, by whom, and what it earned
+        ticker/           the six scrolling lines under the navigation
         publicapi/        the open read path at /api
       app.js            works out who is asking, hands over to the right module
       server.js         starts it
@@ -405,7 +416,7 @@ I want to change what the portal can read.
   npm start            in one terminal
   node test/smoke.js   in another
 
-45 checks over real HTTP. It signs in as all three levels, writes a story with a
+54 checks over real HTTP. It signs in as all three levels, writes a story with a
 photograph, takes it through review to publication, sells an advertisement,
 records the money, has the head office confirm it, counts reads — and then checks
 everything that must NOT be possible: a draft reaching the public, a coordinator

@@ -197,6 +197,17 @@ collect. A gateway slots into the same step (`mode` already allows `gateway`)
 and nothing else changes. That work needs a merchant account and compliance
 sign-off that we do not control, so it is not pretended to be done.
 
+## The scrolling band
+
+Six lines run under the portal's navigation, each divided by a bar and each able
+to link to a scheme, a section or any page. The head office edits them at
+`/office/ticker`: one line at a time, dragged into order (or moved with arrows),
+with the band shown above exactly as the portal draws it. Nobody below head
+office can open that screen.
+
+The portal reads them from `/api/ticker`, or from `public/data/ticker.json` when
+the office is not reachable, so the band works either way.
+
 ## Analytics (section C)
 
 Every read is counted twice over: **all views** (what an advertiser is buying)
@@ -227,6 +238,7 @@ server/
       people/        the accounts that may use the office
       advertising/   placements, rate card, advertisements, payments
       analytics/     what is read, by whom, and what it earned
+      ticker/        the six scrolling lines under the navigation
       publicapi/     the open read path at /api
     app.js       works out who is asking, hands over to the right module
   db/            schema, migrations, seeds, the export and image commands

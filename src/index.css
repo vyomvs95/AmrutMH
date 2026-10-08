@@ -324,3 +324,45 @@ a:hover .underline-grow { background-size: 100% 1px; }
   .no-bar { scrollbar-width: none; -ms-overflow-style: none; }
   .no-bar::-webkit-scrollbar { display: none; }
 }
+
+@layer components {
+  /* ------------------------------------------------------------------
+     The band under the navigation. Six lines running round and round,
+     divided by a bar, in the brand's own orange.
+     ------------------------------------------------------------------ */
+  .ticker-band {
+    background: var(--color-saffron-deep);
+    color: #fff;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-saffron-dim) 70%, black);
+    overflow: hidden;
+  }
+  .ticker-window {
+    display: flex;
+    width: max-content;
+    animation: ticker-roll 60s linear infinite;
+  }
+  .ticker-window:hover { animation-play-state: paused; }
+  .ticker-run {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: 0.42rem 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+  @keyframes ticker-roll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Stands still, and can be read by scrolling it sideways instead. */
+  .ticker-window {
+    animation: none !important;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .ticker-window::-webkit-scrollbar { display: none; }
+}
