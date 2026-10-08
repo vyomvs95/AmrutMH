@@ -1,4 +1,5 @@
 import { categories, img, districtMr, toItem } from './content'
+import { isOfficeId, officeArticle } from './office'
 
 const titleSlug = (s) =>
   String(s)
@@ -49,6 +50,12 @@ const cache = new Map()
 export function loadArticle(id) {
   const key = String(id)
   if (!cache.has(key)) {
+    /* An office address is unguessable and 28 characters long; the archive's
+       own ids are plain numbers. That tells us where to look. */
+    if (isOfficeId(key)) {
+      cache.set(key, officeArticle(key).then((a) => (a ? shape(a) : null)).catch(() => null))
+      return cache.get(key)
+    }
     cache.set(
       key,
       fetch(`/data/a/${encodeURIComponent(key)}.json`)

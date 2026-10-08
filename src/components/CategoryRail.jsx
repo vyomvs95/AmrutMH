@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import Ticker from './Ticker'
 import { categories } from '../lib/content'
 
 /**
@@ -91,10 +92,13 @@ export default function CategoryRail({ items = categories, label = 'विभा
     </button>
   )
 
+  /* The rail and the news band move together — the band belongs to the
+     navigation, so one sticky parent holds both. */
   return (
+    <div className="sticky top-16 z-30">
     <nav
       aria-label={label}
-      className="sticky top-16 z-30 border-b border-warm-200 bg-paper/95 backdrop-blur-md"
+      className="border-b border-warm-200 bg-paper/95 backdrop-blur-md"
     >
       <div className="relative mx-auto max-w-[86rem]">
         {/* Fades — sized to clear the arrows so nothing sits half-hidden */}
@@ -143,5 +147,7 @@ export default function CategoryRail({ items = categories, label = 'विभा
         </div>
       </div>
     </nav>
+    <Ticker />
+    </div>
   )
 }
