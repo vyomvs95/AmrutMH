@@ -4,3 +4,8 @@ dist
 .vercel
 *.local
 scrape/
+
+# Internal only — kept on the machine, never shared through the repository.
+PROJECT_LOG.md
+docs/meeting-*
+docs/client-change-requests-*
