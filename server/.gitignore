@@ -1,0 +1,21 @@
+# Anything that is this machine's, or secret, or regenerated.
+.env
+node_modules/
+
+# the local database, uploads and exports
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+data/pg/
+data/export/
+
+# secrets: starting passwords, the signing key, the database password
+data/first-logins.txt
+data/.session-secret
+data/.pgpw
+
+# logs
+data/*.log
+*.log
+data/uploads/

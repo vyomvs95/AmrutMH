@@ -1,0 +1,68 @@
+-- Advertising, sponsorship and payments.
+-- A district coordinator sells a placement in the field, records the money
+-- taken, and the head office confirms the receipt before it goes live.
+
+CREATE TABLE IF NOT EXISTS ad_slots (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  public_id   TEXT NOT NULL UNIQUE,
+  code        TEXT NOT NULL UNIQUE,     -- popup | hero | fullwidth | footer | side | instory
+  name_mr     TEXT NOT NULL,
+  name_en     TEXT NOT NULL,
+  width_px    INTEGER,
+  height_px   INTEGER,
+  note_mr     TEXT,
+  sort_order  INTEGER NOT NULL DEFAULT 0,
+  is_active   INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS ad_rates (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  slot_id    INTEGER NOT NULL REFERENCES ad_slots(id),
+  days       INTEGER NOT NULL,          -- 2 | 7 | 14 | 30
+  amount_inr INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS ads (
+  id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+  public_id          TEXT NOT NULL UNIQUE,
+  advertiser_name    TEXT NOT NULL,
+  advertiser_contact TEXT,
+  slot_id            INTEGER NOT NULL REFERENCES ad_slots(id),
+  district_id        INTEGER REFERENCES districts(id),
+  created_by         INTEGER REFERENCES users(id),
+  days               INTEGER NOT NULL,
+  amount_inr         INTEGER NOT NULL,
+  target_url         TEXT,
+  status             TEXT NOT NULL DEFAULT 'draft',  -- draft|submitted|live|rejected|ended
+  starts_on          TEXT,
+  ends_on            TEXT,
+  review_note        TEXT,
+  reviewed_by        INTEGER REFERENCES users(id),
+  image_public_id    TEXT,
+  image_path         TEXT,
+  image_widths       TEXT,
+  image_w            INTEGER,
+  image_h            INTEGER,
+  created_at         TEXT NOT NULL,
+  updated_at         TEXT NOT NULL,
+  live_at            TEXT
+);
+
+CREATE TABLE IF NOT EXISTS ad_payments (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  public_id    TEXT NOT NULL UNIQUE,
+  ad_id        INTEGER NOT NULL REFERENCES ads(id),
+  amount_inr   INTEGER NOT NULL,
+  mode         TEXT NOT NULL,            -- cash | upi | neft | cheque | gateway
+  reference    TEXT,
+  received_on  TEXT,
+  recorded_by  INTEGER REFERENCES users(id),
+  confirmed_by INTEGER REFERENCES users(id),
+  confirmed_at TEXT,
+  created_at   TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_ads_status   ON ads(status);
+CREATE INDEX IF NOT EXISTS idx_ads_district ON ads(district_id);
+CREATE INDEX IF NOT EXISTS idx_ads_public   ON ads(public_id);
+CREATE INDEX IF NOT EXISTS idx_adpay_ad     ON ad_payments(ad_id);

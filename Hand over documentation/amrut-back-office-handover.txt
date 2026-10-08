@@ -1,0 +1,522 @@
+================================================================================
+AMRUT MAHARASHTRA
+BACK OFFICE — HANDOVER DOCUMENTATION
+What it does, who uses it, and how to run and change it
+================================================================================
+
+Prepared        : 9 October 2026
+For             : AMRUT Maharashtra and their development team
+Covers          : the staff side of amrutmaharashtra.org — the system where
+                  district coordinators write stories, the divisional head
+                  checks them, and the head office publishes
+Built with      : Node.js and PostgreSQL 18
+Lives in        : the "server" folder of the project repository
+Reaches the site: through a read-only path at /api, which the public portal uses
+
+--------------------------------------------------------------------------------
+1. WHAT THIS IS, IN ONE PARAGRAPH
+--------------------------------------------------------------------------------
+
+The public portal is the shop window. This is the office at the back. Staff sign
+in at a separate address, write and check stories, sell advertising space, and
+watch how much is being read. Nothing here is visible to a visitor, and the
+portal itself only ever reads what has been published.
+
+It is a self-contained folder. Copy it to a server, fill in five lines of
+settings, and it runs. It needs one outside package in production.
+
+--------------------------------------------------------------------------------
+2. THE THREE LEVELS OF OFFICER
+--------------------------------------------------------------------------------
+
+These are the levels AMRUT described: representatives in all 36 districts,
+a divisional head above every group of districts, and the head office above them.
+
+2.1 District coordinator — जिल्हा समन्वयक
+  Signs in with their own e-mail and password.
+  Sees only their own district. Another district's story returns "not found",
+  as does its photograph.
+  Can: write a story, attach up to 8 photographs, save it as a draft, edit it,
+  send it for review; record an advertisement they have sold and enter the money
+  they collected; see how much their district is being read.
+  Cannot: approve anything, publish anything, or see other districts.
+
+2.2 Divisional head — विभागीय प्रमुख
+  Sees every district in their division. (The brief said six districts each; in
+  practice Maharashtra's six divisions hold 7, 5, 5, 8, 5 and 6. The system is
+  seeded with the real figures.)
+  Can: read every story in the division, approve one, or send it back with a
+  written reason; see the division's advertising and reading figures.
+  Cannot: write a story, publish, or manage accounts.
+
+2.3 Head office editor — मुख्य कार्यालय संपादक
+  Sees the whole state.
+  Can: read and edit any story; publish it — this is the only level that can;
+  send a story back; check an advertisement's payment and start it running; stop
+  one; see every account; see all reading and advertising figures.
+  Cannot: nothing is withheld, except writing a story as a district (by design —
+  stories belong to a district).
+
+2.4 How signing in works today
+  E-mail and password at  <site address>/office  — for example
+  https://amrutmaharashtra.org/office
+  The password is stored scrambled (scrypt with a per-password salt), never in
+  readable form. A sign-in lasts 12 hours. Eight wrong attempts for the same
+  e-mail and address within 15 minutes blocks further tries for a while.
+  A wrong e-mail and a wrong password give exactly the same message, so the
+  office cannot be used to discover who has an account.
+
+  NOTE FOR AMRUT: this is a login of its own. If the common sign-on across your
+  22 sites replaces it, we need your authentication documentation; the change is
+  contained to one file (src/core/auth.js) and the sign-in page.
+
+--------------------------------------------------------------------------------
+3. THE TABS, ONE BY ONE
+--------------------------------------------------------------------------------
+
+3.1 मुख्यपृष्ठ · Home
+  The first screen after signing in. Two rows of figures: stories by state
+  (drafts, awaiting review, published, sent back) and advertising (running now,
+  awaiting approval, money collected, and — for a coordinator — their own count).
+  Below them, a plain list of what this account is allowed to do.
+  Every figure respects the signed-in person's level.
+
+3.2 बातम्या · Stories
+  The list of stories this person may see, ten at a time.
+  Sort by any column — headline, district, section, state or date — by clicking
+  the heading; click again to reverse it. Headlines sort in Marathi alphabetical
+  order, not by byte value.
+  Search by headline in the box at the top right.
+  A district coordinator also gets "+ नवीन बातमी लिहा" to write a new one.
+
+3.3 तपासणीसाठी · Review   (divisional head and head office only)
+  The same list, narrowed to what is waiting on this person: stories submitted
+  for the divisional head, and submitted or approved for the head office.
+
+3.4 जाहिराती · Advertising
+  Every advertisement this person may see, sortable the same way.
+  A link to the rate card. A district coordinator also gets
+  "+ नवीन जाहिरात नोंदवा" to record one they have sold.
+
+3.5 आकडेवारी · Analytics
+  Described in full in section 6.
+
+3.6 बातमीपट्टी · Ticker   (head office only)
+  The band of six scrolling lines under the portal's navigation.
+  The screen shows the band exactly as the portal draws it, then the six lines
+  below. One line is edited at a time — its words, its link, and whether it is
+  shown. Drag a line to change its place in the order, or use the arrows beside
+  it. A link must be a path inside the portal (/govet-schemes) or a full web
+  address; anything else is refused.
+  The portal picks a change up immediately — no rebuild, no deploy.
+
+3.7 वापरकर्ते · People   (head office only)
+  Every account, its level and its district or division. Read-only today.
+
+3.8 माझे खाते · Account
+  Your own name, e-mail, level and location.
+
+--------------------------------------------------------------------------------
+4. HOW A STORY TRAVELS
+--------------------------------------------------------------------------------
+
+  draft ──send for review──► submitted ──approve──► approved ──publish──► published
+    ▲                            │                      │
+    └─────── sent back ◄─────────┴──────────────────────┘   (with a written reason)
+
+4.1 Writing it
+  The coordinator enters a headline, picks the section it belongs to (the same
+  16 sections the portal already uses), writes the story, and attaches
+  photographs. It saves as a draft and can be edited as often as needed.
+
+4.2 Photographs
+  JPG, PNG or WEBP. Up to 8 a story, 12 MB each. Every photograph is checked by
+  its actual first bytes, not its file name, so a renamed file cannot slip in.
+  Each is kept as it arrived and also written as WebP at 400, 800 and 1400 pixels
+  wide — the same three sizes the portal already uses — so a page asks for the
+  size it needs instead of a 4 MB camera photograph.
+
+4.3 Checking it
+  The divisional head approves it or sends it back with a reason, which the
+  coordinator sees on the story. The head office can also publish straight from
+  "submitted" without waiting — the brief said audited "either by the divisional
+  head or by the head office".
+
+4.4 Publishing it
+  Only the head office. The moment it is published it becomes visible to the
+  public read path and appears on the portal.
+
+4.5 Everything is recorded
+  Created, edited, submitted, approved, sent back, published — each with who did
+  it, when, and from which address, in the audit_log table. Sign-ins, failed
+  sign-ins and sign-outs are recorded the same way.
+
+--------------------------------------------------------------------------------
+5. HOW AN ADVERTISEMENT TRAVELS
+--------------------------------------------------------------------------------
+
+  recorded ──money entered──► awaiting check ──head office confirms──► running
+       │                              │                                   │
+       └──────────────────────────────┴── rejected (with a reason)        └── ends
+
+5.1 The placements that can be sold
+  Six, each with its pixel size: a popup when the site opens, a slot in the
+  rotating hero, a full-width banner, one above the footer, a side banner, and
+  one inside a story. Each sellable for 2, 7, 14 or 30 days.
+
+5.2 The rate card
+  Price for every placement and duration, shown at जाहिराती → दरपत्रक.
+  THE PRICES ARE PLACEHOLDERS. The client's own chart sits with Hemant, and
+  AMRUT's 13-15 lakh monthly viewership means the figures need raising. They are
+  changed in db/seed-ads.js and are flagged on screen until they are replaced.
+
+5.3 The money
+  The coordinator records how much was taken, how it arrived (UPI, bank
+  transfer, cheque, cash, or a payment gateway) and the reference number. The
+  head office checks the receipt and starts the advertisement. Every rupee is
+  recorded with who took it and who checked it.
+
+  NO PAYMENT GATEWAY IS CONNECTED. Every mode is entered by hand, which is how
+  coordinators collect today. A gateway plugs into the same step — the system
+  already allows "gateway" as a mode — and needs a merchant account and
+  compliance sign-off from AMRUT. Nothing else changes when it arrives.
+
+5.4 Running and ending
+  An advertisement runs from the day it is confirmed until its days are up, then
+  stops by itself. The head office can also stop one early.
+
+--------------------------------------------------------------------------------
+6. THE DASHBOARD — WHAT IS READ, AND BY WHOM
+--------------------------------------------------------------------------------
+
+6.1 Two numbers, always
+  एकूण वाचन · all views     — every read, the same person counted again on a
+                              later visit. This is what an advertiser is buying.
+  वेगवेगळे वाचक · unique readers — how many different people. This is what AMRUT
+                              should plan with.
+  Both appear side by side everywhere, with views-per-reader between them.
+
+6.2 How a reader is counted without being identified
+  A visitor becomes a short scrambled value made from their address, browser and
+  language, mixed with a secret THAT IS REPLACED EVERY DAY. No address, browser
+  string or identifier is stored. So the same person counts once a day per story,
+  and tomorrow their value is different — nobody, including us, can follow a
+  reader from one day to the next. A refresh within a minute does not inflate the
+  figures either.
+
+6.3 What is measured
+  Both the stories written in the office and the 3,035 stories that came across
+  from the old site, so the whole portal is covered. Advertisements carry
+  impressions, reach and clicks.
+
+6.4 What is on the screen
+  - Four figures: all views, unique readers, views per reader, published in this
+    period.
+  - A day-by-day bar for each day; point at a bar for that day's figures.
+  - By district, by section, and the most-read stories — each sortable, the
+    most-read list ten at a time with a search box.
+  - Advertising: money collected, impressions, clicks, and a row per
+    advertisement with its click rate.
+  - Everything on screen downloads as a CSV from the same filters.
+
+6.5 Filters
+  Period (7, 30, 90 or 365 days), district, section, and whether a story was
+  written in the office or came from the archive. The head office can filter by
+  district; the other levels are already limited to their own area.
+
+--------------------------------------------------------------------------------
+7. WHAT THE PUBLIC PORTAL READS
+--------------------------------------------------------------------------------
+
+An open, read-only path. Published and running things only. No sign-in, and no
+staff detail in any reply.
+
+  GET /api/sections                 the 16 sections, with how many stories each
+  GET /api/stories?section=&page=   published stories, newest first
+  GET /api/stories/<id>             one story in full, with related ones
+  GET /api/img/<id>?w=400|800|1400  a story photograph at that width
+  GET /api/ads?slot=                advertisements running right now
+  GET /api/ads/img/<id>?w=          the artwork of a running advertisement
+  GET /api/ticker                   the six scrolling lines, in order
+  POST /api/view/<id>               records that a story was read
+  POST /api/ads/<id>/click          records a click on an advertisement
+
+A draft, a story in review, an unpaid advertisement and a finished one all
+return "not found" here. Each of those cases is covered by an automated test.
+
+--------------------------------------------------------------------------------
+8. ADDRESSES THAT CANNOT BE GUESSED
+--------------------------------------------------------------------------------
+
+AMRUT asked that nobody be able to count their way from one page to the next.
+No address anywhere contains 1, 2, 3. Every record carries its own:
+
+  /office/stories/Xt-QGgImsHYGewqIU5zUBgIlhZ92
+
+That is 16 random bytes followed by a 6-character checksum. The randomness makes
+it unguessable; the checksum lets the server throw out a mistyped or invented
+address without touching the database. The checksum deliberately uses no secret
+key — rotating one would break every address already saved.
+
+A page that does not exist and a page you are not allowed to open return exactly
+the same "not found", so the office cannot be used to work out what exists.
+
+================================================================================
+PART TWO — FOR THE DEVELOPER
+================================================================================
+
+--------------------------------------------------------------------------------
+9. RUNNING IT ON A LAPTOP
+--------------------------------------------------------------------------------
+
+Node.js 22.5 or newer. Check with  node -v
+
+  cd server
+  cp .env.example .env
+  npm run db:start        # a PostgreSQL just for this machine, no admin rights
+                          # copy the DATABASE_URL it prints into .env
+  npm install pg
+  node db/seed.js         # tables, divisions, districts, sections, 3 accounts
+  node db/seed-ads.js     # advertising placements and the rate card
+  node db/seed-legacy.js  # names of the 3,035 archive stories (optional)
+  npm start
+
+Open  http://localhost:4000/office
+
+db/seed.js prints one starting account per level and writes them to
+data/first-logins.txt, which is never committed. Change those passwords before
+the office is reachable from the internet.
+
+To work with no database at all, leave DATABASE_URL blank and it falls back to a
+single file, data/amrut.db. PostgreSQL is what is tested and what production uses.
+
+--------------------------------------------------------------------------------
+10. PUTTING IT ON AMRUT'S SERVER
+--------------------------------------------------------------------------------
+
+  1. Copy the "server" folder onto the machine.
+  2. Copy .env.example to .env and fill in:
+       DATABASE_URL     their PostgreSQL details
+       BASE_PATH        where the office sits, e.g. /office
+       SECURE_COOKIES   1 once the site is served over https
+       PORTAL_URL       the public site, so the office can link out to a story
+       ARCHIVE_IMAGE_BASE  where the old site's photographs still live
+  3. npm install --omit=dev        (installs only "pg")
+  4. node db/setup.js              creates the tables and applies any changes
+     node db/seed.js               divisions, districts, sections, first account
+     node db/seed-ads.js           placements and rates
+  5. node src/server.js, kept running by whatever the server already uses —
+     systemd, pm2, or cPanel's Node.js App panel.
+  6. Put it behind the existing web server so /office and /api reach this port.
+
+Nothing else changes. The same code runs on the file database on a laptop and on
+PostgreSQL in production.
+
+  THE ONE OPEN QUESTION: does the hosting run Node.js, and can a PostgreSQL
+  database be created? Ordinary PHP shared hosting often cannot run Node. If the
+  answer is no, this needs either a small separate server or a rewrite in PHP.
+
+--------------------------------------------------------------------------------
+11. WHERE THINGS LIVE
+--------------------------------------------------------------------------------
+
+  server/
+    .env.example        the settings to copy and fill in
+    README.md           a shorter version of this document
+    src/
+      core/             the plumbing, shared by everything
+        config.js         reads .env; the only file that knows where things are
+        db.js             PostgreSQL or the file database, behind one interface
+        auth.js           passwords, the sign-in cookie, form protection
+        ids.js            the unguessable addresses
+        http.js           sending a reply, reading a form, the audit record
+        upload.js         reading a form that carries photographs
+        images.js         the 400/800/1400 WebP copies
+        visitor.js        counting a reader without identifying them
+      shared/
+        layout.js         the header, navigation and page shell
+        table.js          sortable headings, paging
+      modules/            one folder per part of the office
+        office/           signing in, home screen, account
+        editorial/        stories: writing, review, publishing, photographs
+        people/           the accounts that may use the office
+        advertising/      placements, rate card, advertisements, payments
+        analytics/        what is read, by whom, and what it earned
+        ticker/           the six scrolling lines under the navigation
+        publicapi/        the open read path at /api
+      app.js            works out who is asking, hands over to the right module
+      server.js         starts it
+      public/office.css one stylesheet, no frameworks
+    db/
+      schema.*.sql      the tables, one file per database engine
+      migrations/       every change since, applied in order and recorded
+      setup.js          creates the tables
+      seed.js           divisions, districts, sections, first accounts
+      seed-ads.js       advertising placements and rates
+      seed-legacy.js    names of the archive stories
+      seed-demo-*.js    sample figures and sample stories, for demonstrations
+      make-images.js    makes the responsive copies for older photographs
+      export-public.js  writes published stories out as files
+      migrate.js        applies anything new in migrations/
+      local-postgres.js the development database on a laptop
+    test/smoke.js       one end-to-end check of the whole thing
+    data/               the local database, uploads, logs — never committed
+
+EVERY FOLDER CARRIES ITS OWN README saying what it owns and what is deliberately
+not built. Start at src/modules/README.md.
+
+--------------------------------------------------------------------------------
+12. WHERE TO CHANGE WHAT
+--------------------------------------------------------------------------------
+
+I want to change the wording on a screen.
+  The module's views.js. Nothing else holds text.
+  Example: the story screens are src/modules/editorial/views.js
+
+I want to change who can do what.
+  editorial: abilities() and scopeClause() in src/modules/editorial/routes.js
+  advertising: abilities() and scope() in src/modules/advertising/routes.js
+  These are the only places permissions are decided. Every action re-checks them
+  on the server; the buttons on screen are only a hint.
+
+I want to add a column to a table, or a new screen.
+  Add the column to the module's views.js and, if it must be sortable, add its
+  key to that module's sort map. Sorting only ever happens through those maps,
+  so nothing from the address bar reaches the query.
+
+I want to add a whole new section to the office.
+  Make a folder under src/modules, write routes.js and views.js, add it to the
+  list in src/app.js, and add its tab in src/shared/layout.js. A module exports
+  handle(ctx) and returns true once it has answered.
+
+I want to change the database.
+  Never edit schema.*.sql for an existing installation. Add a numbered file to
+  db/migrations and run  npm run migrate.  Each migration runs inside a
+  transaction and is recorded, so it can never half-apply or run twice. If the
+  change differs per engine, write two files: 004_x.postgres.sql and
+  004_x.sqlite.sql — they are remembered under one name.
+
+I want to change the look.
+  src/public/office.css — one file, no frameworks. Its address carries a hash of
+  the file, so a change is never served stale from a browser cache.
+
+I want to change the rate card.
+  db/seed-ads.js, then re-run it. It only fills in what is missing; existing
+  rates are left alone, so change them in the database or clear them first.
+
+I want to change what the portal can read.
+  src/modules/publicapi/routes.js. Every query there filters on status. This is
+  the file where a mistake would be public — change it with care and run the
+  tests.
+
+--------------------------------------------------------------------------------
+13. CHECKING NOTHING IS BROKEN
+--------------------------------------------------------------------------------
+
+  npm start            in one terminal
+  node test/smoke.js   in another
+
+54 checks over real HTTP. It signs in as all three levels, writes a story with a
+photograph, takes it through review to publication, sells an advertisement,
+records the money, has the head office confirm it, counts reads — and then checks
+everything that must NOT be possible: a draft reaching the public, a coordinator
+approving their own work, a tampered address, an unpaid advertisement appearing
+on the portal, one district opening another's story.
+
+RUN IT AFTER EVERY CHANGE. It is the only thing standing between a small edit
+and a quiet mistake.
+
+--------------------------------------------------------------------------------
+14. DEPENDENCIES
+--------------------------------------------------------------------------------
+
+One in production: pg, the PostgreSQL connector.
+
+Everything else is built into Node — the web server, password scrambling, reading
+photograph uploads, and even a fallback database. This is deliberate: a
+government server often cannot reach the internet to install packages, and a
+short list is far easier to get through a security review.
+
+Two optional extras:
+  sharp             makes the responsive photograph copies. If a locked-down
+                    server cannot build it, the office still runs and serves the
+                    originals — nothing breaks, the photographs are just heavier.
+  embedded-postgres a throwaway PostgreSQL for a laptop. Development only;
+                    install production with  npm install --omit=dev
+
+--------------------------------------------------------------------------------
+15. SECURITY, FOR THE REVIEW
+--------------------------------------------------------------------------------
+
+  - Passwords stored with scrypt and a per-password salt. Never readable.
+  - Sign-in cookies are signed; a tampered one is rejected without a database
+    lookup. HttpOnly and SameSite=Lax, and Secure when SECURE_COOKIES=1.
+  - Every form carries a one-time field checked against a cookie, so another
+    site cannot submit on a signed-in person's behalf.
+  - Sign-in limited to 8 attempts per e-mail and address per 15 minutes.
+  - A wrong e-mail and a wrong password give the same message.
+  - Addresses are unguessable; "not allowed" and "does not exist" look identical.
+  - Uploaded photographs are accepted only if their first bytes really are a JPG,
+    PNG or WEBP, and are saved under an unguessable name, never the uploaded one.
+  - A photograph attached to one district's story cannot be fetched by another.
+  - Every office page carries noindex, so it never appears in search results.
+  - Sorting and filtering can only use a fixed list of columns; nothing from the
+    address bar reaches a query.
+  - No reader's address is stored anywhere.
+  - Sign-ins, failures and every editorial and advertising action are recorded in
+    audit_log.
+
+  Before it faces the public internet: change the starting passwords, serve over
+  https with SECURE_COOKIES=1, and let AMRUT's own security audit look at it.
+
+--------------------------------------------------------------------------------
+16. WHAT IS NOT BUILT YET
+--------------------------------------------------------------------------------
+
+Known and deliberate. Listed so nobody discovers them in a demonstration.
+
+  Accounts
+    No screen to create, edit or switch off an account. The 36 district
+    coordinators cannot be created from inside the office today — only by a
+    script. THIS IS THE LARGEST GAP.
+    Nobody can change their own password, and there is no password reset.
+
+  Stories
+    No deleting a story, no captions or reordering of photographs, no edit
+    history, no scheduled publishing, no notification when something is waiting.
+
+  Advertising
+    No payment gateway and no self-serve path for an outside advertiser to buy a
+    banner themselves. No targets per coordinator. No rate-card editing on
+    screen. No invoice or receipt, and no GST handling.
+    Advertisements are not displayed on the public portal yet — the office serves
+    them at /api/ads, but the portal does not ask for them.
+
+  Analytics
+    No scheduled e-mail reports, no comparison against the previous period, and
+    no traffic sources — that last one needs a referrer, which deserves a privacy
+    decision first.
+
+  Everywhere
+    Never run on a real server, never over https, never used by a real
+    coordinator on a real phone.
+
+--------------------------------------------------------------------------------
+17. DECISIONS NEEDED FROM AMRUT
+--------------------------------------------------------------------------------
+
+  1. Does the hosting run Node.js, and can a PostgreSQL database be created?
+  2. What are the 36 district e-mail addresses — one per office, or the officers'
+     own?
+  3. Who creates accounts — the head office editor, or an IT administrator above
+     them?
+  4. Should the head office be able to publish without the divisional head
+     approving? It can today, because the brief said "either".
+  5. The real advertising rate card, and what revenue to expect at 13-15 lakh
+     monthly views.
+  6. Does the common sign-on across the 22 sites replace this login? If so, we
+     need the authentication documentation.
+  7. Is the division-to-district grouping ours (7/5/5/8/5/6, as the state is
+     actually organised) or does AMRUT group them differently?
+
+================================================================================

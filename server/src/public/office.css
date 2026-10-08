@@ -1,0 +1,238 @@
+/* AMRUT back office - one stylesheet, no frameworks.
+   Colours are the portal's own, read from its stylesheet. */
+:root{
+  --saffron:#F97316; --deep:#D35400; --cream1:#FFF7ED; --cream2:#FFEDD5;
+  --peach:#FFE4CC; --ink:#212529; --muted:#6B6459; --line:#E7DED1; --white:#fff;
+  --ok:#15803D; --warn:#B45309; --bad:#B91C1C;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--cream1); color:var(--ink);
+  font-family:'Mukta','Noto Sans Devanagari',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:16px; line-height:1.75; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:'Tiro Devanagari Marathi','Noto Serif Devanagari',Georgia,serif;font-weight:600;line-height:1.5;margin:0}
+a{color:var(--deep)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---- shell ---- */
+.top{background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.top-in{max-width:1100px;margin:0 auto;padding:.7rem 1.25rem;display:flex;align-items:center;gap:1rem}
+.brand{display:flex;flex-direction:column;line-height:1.3}
+.brand b{font-family:'Tiro Devanagari Marathi',Georgia,serif;font-size:1.05rem}
+.brand span{font-size:.72rem;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.spacer{flex:1}
+.who{text-align:right;font-size:.82rem;line-height:1.45}
+.who b{display:block;font-size:.9rem}
+.who span{color:var(--muted)}
+.nav{background:var(--white);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;gap:.25rem;overflow-x:auto}
+.nav a{
+  padding:.65rem .9rem;font-size:.9rem;text-decoration:none;color:var(--ink);
+  border-bottom:2px solid transparent;white-space:nowrap
+}
+.nav a:hover{background:var(--cream2)}
+.nav a.on{border-bottom-color:var(--saffron);color:var(--deep);font-weight:500}
+main{max-width:1100px;margin:0 auto;padding:1.75rem 1.25rem 4rem}
+footer{max-width:1100px;margin:0 auto;padding:1rem 1.25rem 2.5rem;color:var(--muted);font-size:.78rem;border-top:1px solid var(--line)}
+
+/* ---- pieces ---- */
+.page-head{margin-bottom:1.5rem}
+.page-head h1{font-size:1.5rem}
+.page-head p{margin:.35rem 0 0;color:var(--muted);font-size:.9rem}
+.card{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:1.25rem;margin-bottom:1.1rem}
+.card h2{font-size:1.05rem;margin-bottom:.5rem}
+.card p{margin:.3rem 0;font-size:.92rem}
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));margin-bottom:1.1rem}
+.stat{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.25rem}
+.stat b{display:block;font-size:1.9rem;font-family:'Tiro Devanagari Marathi',Georgia,serif;line-height:1.1}
+.stat span{font-size:.84rem;color:var(--muted)}
+.stat.accent{border-left:3px solid var(--saffron)}
+table{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--white)}
+th,td{text-align:left;padding:.65rem .8rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+tbody tr:hover{background:var(--cream1)}
+.tag{display:inline-block;padding:.08rem .5rem;border-radius:999px;font-size:.72rem;border:1px solid var(--line);color:var(--muted);background:var(--cream1)}
+.tag.editor{border-color:var(--deep);color:var(--deep)}
+.tag.divisional{border-color:var(--warn);color:var(--warn)}
+.tag.district{border-color:var(--ok);color:var(--ok)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;color:var(--muted);word-break:break-all}
+.empty{padding:2.5rem 1.25rem;text-align:center;color:var(--muted);background:var(--white);border:1px dashed var(--line);border-radius:10px}
+.empty b{display:block;color:var(--ink);font-size:1rem;margin-bottom:.3rem;font-family:'Tiro Devanagari Marathi',Georgia,serif}
+.note{background:var(--cream2);border-left:3px solid var(--saffron);padding:.8rem 1rem;border-radius:0 8px 8px 0;font-size:.88rem;margin:1rem 0}
+
+/* ---- sign in ---- */
+.signin{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.25rem}
+.signin-box{width:100%;max-width:400px}
+.signin-box .mark{text-align:center;margin-bottom:1.5rem}
+.signin-box .mark b{display:block;font-family:'Tiro Devanagari Marathi',Georgia,serif;font-size:1.35rem}
+.signin-box .mark span{font-size:.78rem;color:var(--muted)}
+form.box{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:1.5rem}
+label{display:block;font-size:.85rem;margin-bottom:.3rem;font-weight:500}
+label em{font-style:normal;color:var(--muted);font-weight:400}
+input[type=email],input[type=password],input[type=text]{
+  width:100%;padding:.6rem .75rem;margin-bottom:1rem;border:1px solid var(--line);
+  border-radius:7px;font:inherit;font-size:.95rem;background:var(--cream1)
+}
+input:focus{outline:2px solid var(--saffron);outline-offset:1px;background:var(--white)}
+button{
+  width:100%;padding:.65rem 1rem;background:var(--deep);color:#fff;border:0;border-radius:7px;
+  font:inherit;font-size:.95rem;font-weight:500;cursor:pointer
+}
+button:hover{background:var(--saffron)}
+.linkbtn{background:none;border:0;color:var(--deep);cursor:pointer;font:inherit;font-size:.82rem;width:auto;padding:0;text-decoration:underline}
+.err{background:#FEF2F2;border-left:3px solid var(--bad);color:var(--bad);padding:.6rem .8rem;border-radius:0 6px 6px 0;font-size:.88rem;margin-bottom:1rem}
+@media (max-width:640px){ main{padding:1.25rem .9rem 3rem} .top-in,.nav-in{padding-left:.9rem;padding-right:.9rem} }
+
+/* ---- session 2: writing, photographs, review ---- */
+textarea{width:100%;padding:.7rem .8rem;margin-bottom:1rem;border:1px solid var(--line);border-radius:7px;
+  font:inherit;font-size:1rem;line-height:1.85;background:var(--cream1);resize:vertical}
+textarea:focus{outline:2px solid var(--saffron);outline-offset:1px;background:var(--white)}
+/* The arrow a browser draws itself sits hard against the border and ignores
+   padding, so we draw our own and leave the same gap on both sides. */
+select{
+  width:100%;margin-bottom:1rem;border:1px solid var(--line);border-radius:7px;
+  font:inherit;font-size:.95rem;color:var(--ink);
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  padding:.6rem calc(.75rem + 12px + .55rem) .6rem .75rem;
+  background-color:var(--cream1);
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%236E6659' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right .75rem center;
+  background-size:12px 8px;
+}
+select:focus{outline:2px solid var(--saffron);outline-offset:1px;background-color:var(--white)}
+select::-ms-expand{display:none}
+input[type=file]{width:100%;margin-bottom:1rem;font:inherit;font-size:.88rem}
+.cta{display:inline-block;background:var(--deep);color:#fff;text-decoration:none;padding:.55rem 1rem;
+  border-radius:7px;font-size:.92rem;margin-bottom:1rem}
+.cta:hover{background:var(--saffron)}
+.thumbs{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));margin:0 0 1.1rem}
+.thumbs figure{margin:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--white)}
+.thumbs img{display:block;width:100%;height:120px;object-fit:cover}
+.story-body{font-size:1.02rem;line-height:1.95}
+.story-body p{margin:0 0 1rem}
+.tag.st-draft{border-color:var(--line)}
+.tag.st-submitted{border-color:var(--warn);color:var(--warn)}
+.tag.st-approved{border-color:var(--deep);color:var(--deep)}
+.tag.st-published{border-color:var(--ok);color:var(--ok)}
+.tag.st-returned{border-color:var(--bad);color:var(--bad)}
+
+/* ---- analytics ---- */
+.filters{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;margin-bottom:1.2rem}
+.chips{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.7rem}
+.chip{display:inline-block;padding:.25rem .7rem;border:1px solid var(--line);border-radius:999px;
+  font-size:.84rem;text-decoration:none;color:var(--ink);background:var(--cream1)}
+.chip:hover{border-color:var(--saffron)}
+.chip.on{background:var(--deep);border-color:var(--deep);color:#fff}
+.filter-form{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.filter-form select{width:auto;min-width:170px;margin:0}
+.filter-form button{width:auto;padding:.45rem .9rem;font-size:.88rem}
+.stat span em{font-style:normal;color:var(--muted);font-size:.9em}
+.spark{display:flex;align-items:flex-end;gap:2px;height:120px;margin:.6rem 0 .2rem}
+.spark-col{flex:1;height:100%;display:flex;align-items:flex-end;min-width:3px;position:relative}
+.spark-bar{width:100%;background:var(--peach);border-radius:2px 2px 0 0;position:relative;display:flex;align-items:flex-end}
+.spark-uniq{width:100%;background:var(--deep);border-radius:2px 2px 0 0}
+.spark-axis{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
+
+/* ---- back link, above the page title ---- */
+.backlink{margin:0 0 1.25rem;font-size:.9rem}
+.backlink a{text-decoration:none;color:var(--muted)}
+.backlink a:hover{color:var(--deep);text-decoration:underline}
+/* ---- the record's own address, labelled rather than bare ---- */
+.idline{margin:1.5rem 0 0;font-size:.74rem;color:var(--muted);line-height:1.6}
+.idline b{display:block;font-weight:500;font-family:'Mukta',sans-serif;letter-spacing:.02em}
+
+/* ---- a story row with its picture ---- */
+.rowstory{display:flex;gap:.7rem;align-items:flex-start}
+.thumb{width:52px;height:38px;flex:0 0 52px;object-fit:cover;border-radius:5px;
+  border:1px solid var(--line);background:var(--cream2);display:block}
+.thumb-none{background:var(--cream2)}
+.rowstory b{font-weight:500}
+.rowlinks{display:flex;flex-direction:column;gap:.15rem;white-space:nowrap}
+.rowlinks a{font-size:.8rem;text-decoration:none}
+.rowlinks a:hover{text-decoration:underline}
+
+/* ---- sortable tables, paging and search ---- */
+th a.sortable{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:.25rem;
+  text-transform:uppercase;letter-spacing:.05em;font-size:inherit}
+th a.sortable:hover{color:var(--deep)}
+th a.sortable.on{color:var(--deep)}
+th a.sortable .caret{opacity:.45;font-size:.9em}
+th a.sortable.on .caret{opacity:1}
+th a.sortable:hover .caret{opacity:.9}
+.muted-note{color:var(--muted);font-size:.9rem}
+.pager{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:.9rem;font-size:.85rem}
+.pager a{text-decoration:none;padding:.25rem .6rem;border:1px solid var(--line);border-radius:6px;background:var(--cream1)}
+.pager a:hover{border-color:var(--saffron)}
+.pager .off{padding:.25rem .6rem;color:var(--line)}
+.pager .where{color:var(--muted)}
+.pager-note{color:var(--muted);font-size:.82rem;margin-top:.7rem}
+.tablesearch{display:flex;gap:.45rem;align-items:center;flex-wrap:wrap;margin:0}
+.tablesearch input[type=search]{
+  margin:0;width:auto;min-width:230px;max-width:320px;height:36px;padding:0 .75rem;font-size:.9rem}
+.tablesearch button{
+  width:auto;height:36px;padding:0 1rem;font-size:.88rem;line-height:1;white-space:nowrap}
+.tablesearch a{font-size:.82rem;color:var(--muted);white-space:nowrap}
+/* a panel's heading and its search box, on one line */
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:.75rem}
+.panel-head h2{margin:0}
+/* a list page's main action and its search box, on one line */
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.toolbar .cta{margin:0}
+@media (max-width:640px){
+  .panel-head,.toolbar{align-items:stretch}
+  .tablesearch{width:100%}
+  .tablesearch input[type=search]{flex:1;max-width:none}
+}
+
+/* ---- what a day's bar says when you point at it ---- */
+.spark-tip{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  z-index:20;background:var(--white);border:1px solid var(--line);border-radius:8px;
+  box-shadow:0 6px 20px rgba(33,37,41,.13);padding:.55rem .7rem;min-width:168px;
+  font-size:.78rem;line-height:1.5;white-space:nowrap;pointer-events:none}
+.spark-col:hover .spark-tip,.spark-col:focus-within .spark-tip{display:block}
+.spark-tip b{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.72rem;color:var(--muted);font-weight:400;margin-bottom:.35rem;
+  padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+.spark-tip span{display:flex;align-items:center;gap:.4rem;color:var(--ink)}
+.spark-tip em{margin-left:auto;font-style:normal;font-weight:600;font-variant-numeric:tabular-nums}
+.spark-tip .sw{width:9px;height:9px;border-radius:2px;display:inline-block;flex:0 0 9px}
+.sw-views{background:var(--peach)}
+.sw-uniq{background:var(--deep)}
+.sw-none{background:transparent;border:1px solid var(--line)}
+/* near the ends, keep the tooltip inside the card */
+.spark-col:nth-child(-n+3) .spark-tip{left:0;transform:none}
+.spark-col:nth-last-child(-n+3) .spark-tip{left:auto;right:0;transform:none}
+.spark-bar{transition:filter .12s ease}
+.spark-col:hover .spark-bar{filter:brightness(.94)}
+
+/* ---- the scrolling band editor ---- */
+.tick-preview{background:var(--deep);border-radius:8px;overflow:hidden;padding:.55rem 0}
+.tick-strip{display:flex;gap:.9rem;align-items:center;white-space:nowrap;overflow-x:auto;
+  padding:0 .9rem;color:#fff;font-size:.9rem;scrollbar-width:none}
+.tick-strip::-webkit-scrollbar{display:none}
+.tick-sep{opacity:.55}
+.tick-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.4rem}
+.tick-row{display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;background:var(--cream1);
+  border:1px solid var(--line);border-radius:8px}
+.tick-row.dragging{opacity:.45;border-style:dashed}
+.tick-row.editing{display:block;background:var(--white);border-color:var(--saffron)}
+.tick-grip{cursor:grab;color:var(--warn);font-size:1rem;line-height:1;user-select:none}
+.tick-no{width:1.4rem;text-align:center;color:var(--muted);font-size:.8rem}
+.tick-text{flex:1;min-width:0}
+.tick-text b{display:block;font-weight:500;font-size:.95rem}
+.tick-link{display:block;font-family:ui-monospace,Menlo,monospace;font-size:.74rem;color:var(--muted);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tick-move{display:flex;gap:.2rem}
+.tick-move form{width:auto;margin:0}
+.tick-move button{width:auto;padding:.15rem .45rem;font-size:.78rem;background:var(--white);
+  color:var(--ink);border:1px solid var(--line)}
+.tick-move button:hover{background:var(--cream2);border-color:var(--saffron)}
+.tick-edit{font-size:.84rem;white-space:nowrap}
+.tick-check{display:flex;align-items:center;gap:.45rem;font-weight:400;margin:.2rem 0 1rem}
+.tick-check input{width:auto;margin:0}
+.tick-actions{display:flex;gap:.8rem;align-items:center}
+.tick-actions button{width:auto;padding:.45rem 1rem}
