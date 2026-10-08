@@ -47,8 +47,13 @@ export default function App() {
         </Suspense>
       </main>
 
-      <VisitorCount />
-      <Footer />
+      {/* The breathing space belongs above this pair. It used to sit on the
+          footer, which left a gap between the visitor count and the footer
+          once the count was added — and still works if the count is absent. */}
+      <div className="mt-24">
+        <VisitorCount />
+        <Footer />
+      </div>
       <Assistant />
     </>
   )
