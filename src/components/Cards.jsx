@@ -150,7 +150,7 @@ export function SectionHead({ mr, blurb, to, count }) {
       {to && (
         <Link to={to} className="group flex shrink-0 items-center gap-2 pb-1">
           <span className="text-[14.5px] font-semibold text-saffron-deep">
-            <span className="underline-grow">सर्व {count} पहा</span>
+            <span className="underline-grow">सर्व <span translate="no">{count}</span> पहा</span>
           </span>
           <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 text-saffron transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
             <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
