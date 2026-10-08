@@ -1,6 +1,7 @@
 import raw from '../data/content.json'
 import images from '../data/images.json'
 import rawArticleIds from '../data/article-ids.json'
+import { officeItemsFor, isOfficeId } from './office'
 
 export const meta = raw.meta
 export const org = raw.meta.org
@@ -106,10 +107,16 @@ export function loadCategory(slug) {
     const c = categories.find((x) => x.slug === slug)
     catCache.set(
       slug,
-      fetch(`/data/cat/${slug}.json`)
-        .then((r) => (r.ok ? r.json() : []))
-        .then((list) => list.map((it) => toItem(it, { slug: c.key, mr: c.mr })))
-        .catch(() => c?.items || [])
+      Promise.all([
+        fetch(`/data/cat/${slug}.json`)
+          .then((r) => (r.ok ? r.json() : []))
+          .then((list) => list.map((it) => toItem(it, { slug: c.key, mr: c.mr })))
+          .catch(() => c?.items || []),
+        /* newly written stories sit above the archive; absent, this is [] */
+        officeItemsFor(c.key)
+          .then((list) => list.map((it) => toItem(it, { slug: c.key, mr: c.mr })))
+          .catch(() => []),
+      ]).then(([archive, fresh]) => [...fresh, ...archive])
     )
   }
   return catCache.get(slug)
@@ -127,7 +134,10 @@ export const itemById = (id) => allItems.find((i) => i.id === String(id))
    only by the (code-split) article route. */
 export const ARTICLE_IDS = new Set(Object.keys(rawArticleIds))
 
-export const hasArticle = (id) => ARTICLE_IDS.has(String(id))
+/* Office stories are only ever listed once published, and we hold every word
+   of them, so they are always openable — the rule stays "never link to a page
+   that would 404". */
+export const hasArticle = (id) => ARTICLE_IDS.has(String(id)) || isOfficeId(id)
 
 /* ------------------------------------------------------------------
    Schemes
@@ -186,6 +196,24 @@ export const ARCHIVE = 'https://amrutmaharashtra.org/'
 
 export function img(src) {
   if (!src) return null
+
+  /* A photograph uploaded in the back office carries its own sizes, so there
+     is nothing to look up — the three WebP widths are already made. */
+  if (typeof src === 'object' && src.office) {
+    const ws = src.widths.length ? src.widths : [400]
+    const file = (w) => src.url[w]
+    const width = src.w || 1200
+    const height = src.h || 800
+    return {
+      src: file(ws[ws.length - 1]),
+      srcSet: ws.map((w) => `${file(w)} ${w}w`).join(', '),
+      width,
+      height,
+      ratio: +(width / height).toFixed(4),
+      portrait: width / height < 0.92,
+    }
+  }
+
   const m = images[src]
   if (!m) {
     if (!/^(photos\/|https?:\/\/)/.test(src)) return null

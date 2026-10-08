@@ -1,0 +1,27 @@
+{
+  "name": "amrut-office",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AMRUT Maharashtra - back office. Story authoring, district/divisional/head-office review, publishing.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "setup": "node db/setup.js",
+    "seed": "node db/seed.js",
+    "db:start": "node db/local-postgres.js start",
+    "db:stop": "node db/local-postgres.js stop",
+    "migrate": "node db/migrate.js",
+    "images": "node db/make-images.js",
+    "export": "node db/export-public.js"
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "optionalDependencies": {
+    "pg": "^8.23.1",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "embedded-postgres": "^18.4.0-beta.17"
+  }
+}

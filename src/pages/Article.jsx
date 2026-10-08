@@ -6,6 +6,7 @@ import { SchemeBridge } from '../components/Scheme'
 import { StoryCard } from '../components/Cards'
 import { img, dateMr, schemeFor, org } from '../lib/content'
 import { loadArticle, articleHero } from '../lib/articles'
+import { reportView } from '../lib/office'
 import NotFound from './NotFound'
 
 function Meta({ article }) {
@@ -56,7 +57,11 @@ export default function Article() {
     let live = true
     setArticle(undefined)
     window.scrollTo(0, 0)
-    loadArticle(id).then((a) => live && setArticle(a))
+    loadArticle(id).then((a) => {
+      if (!live) return
+      setArticle(a)
+      if (a) reportView(id)          // counted once per reader per day
+    })
     return () => {
       live = false
     }
