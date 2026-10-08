@@ -1,16 +1,5 @@
 'use strict'
-/* The front door.
- *
- * Works out who is asking, then hands the request to whichever module owns it:
- *
- *   modules/publicapi    the open read path at /api        (no sign-in)
- *   modules/office       signing in, home screen, account
- *   modules/editorial    stories, review, photographs
- *   modules/people       the accounts that may use the office
- *   modules/advertising  advertisements, rate card, payments
- *
- * A module exports handle(ctx) and returns true when it has answered.
- */
+/* The front door. */
 
 const fs = require('node:fs')
 const path = require('node:path')
@@ -50,7 +39,7 @@ async function handle(req, res) {
   let route = url.pathname
   const cookies = auth.parseCookies(req.headers.cookie)
 
-  /* open to anyone */
+  /* open to anyone. */
   if (route.startsWith('/api/')) { await publicApi.handle(req, res, route, url); return }
   if (route === '/' || route === '') return send(res, 302, '', { location: B + '/dashboard' })
   if (route === B + '/health') {
@@ -63,7 +52,7 @@ async function handle(req, res) {
   if (!route.startsWith(B)) return notFound(res)
   route = route.slice(B.length) || '/'
 
-  /* the form-protection cookie */
+  /* the form-protection cookie. */
   let csrf = cookies[auth.CSRF_COOKIE]
   let setCsrf = null
   if (!csrf) { csrf = auth.newCsrf(); setCsrf = auth.cookieHeader(auth.CSRF_COOKIE, csrf, { maxAge: 86400 }) }

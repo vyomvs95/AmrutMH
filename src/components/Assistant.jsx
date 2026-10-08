@@ -74,7 +74,7 @@ export default function Assistant() {
 
   return (
     <>
-      {/* Launcher */}
+      {/* Launcher. */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -101,7 +101,7 @@ export default function Assistant() {
         )}
       </button>
 
-      {/* Panel */}
+      {/* Panel. */}
       <div
         id="assistant-panel"
         role="dialog"

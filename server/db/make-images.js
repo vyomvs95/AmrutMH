@@ -1,6 +1,5 @@
 'use strict'
-/* Makes the 400/800/1400 WebP copies for photographs uploaded before the
-   resizer existed. Safe to run again - it skips anything already done. */
+/* Makes the 400/800/1400 WebP copies for photographs uploaded before the resizer existed.. */
 const db = require('../src/core/db')
 const images = require('../src/core/images')
 

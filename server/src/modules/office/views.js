@@ -1,6 +1,5 @@
 'use strict'
-/* The shell: signing in, the home screen, your own account, and the page shown
-   when something is not there (or not yours). */
+/* The shell: signing in, the home screen, your own account, and the page shown when. */
 const { esc, page, bare, ROLE_MR, ROLE_EN, u } = require('../../shared/layout')
 
 function signIn({ csrf, error, email = '' }) {

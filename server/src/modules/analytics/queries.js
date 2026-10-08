@@ -1,27 +1,19 @@
 'use strict'
-/* Every figure on the dashboard comes from here, so there is one definition of
-   each number rather than one per screen.
-
-   A "subject" is either an office story's address or an archive story's number.
-   Both are counted; the archive's titles come from the legacy_stories table. */
+/* Every figure on the dashboard comes from here, so there is one definition of each. */
 
 const db = require('../../core/db')
 
-/* Marathi alphabetical order. PostgreSQL has a proper Marathi collation;
-   the fallback file database sorts by code point, which for Devanagari is
-   the same order for ordinary names. */
+/* Marathi alphabetical order. */
 const MR = db.isPg ? ' COLLATE "mr-IN-x-icu"' : ''
 
-/* Sorting only ever happens through these maps, so a column name can never
-   arrive from the address bar. */
+/* Sorting only ever happens through these maps, so a column name can never arrive from. */
 const order = (map, sort, fallback) => {
   const col = map[sort] || map[fallback]
   return col
 }
 const dirOf = (dir) => (dir === 'asc' ? 'ASC' : 'DESC')
 
-/* One shape for every story-view query: the daily counts, with the story they
-   belong to resolved whether it was written here or came from the old site. */
+/* One shape for every story-view query, office stories and archive alike. */
 const BASE = `
   SELECT vd.subject, vd.day, vd.views, vd.uniques,
          COALESCE(s.title, l.title, vd.subject)        AS title,
@@ -102,8 +94,7 @@ const STORY_SORTS = {
   views: 'SUM(views)', uniques: 'SUM(uniques)',
 }
 
-/* The most-read list, a page at a time, searchable by headline.
-   Returns the rows plus enough to draw the pager. */
+/* The most-read list, a page at a time, searchable by headline. Returns the rows plus. */
 async function topStories(user, f, opts = {}) {
   const page = Math.max(1, Number(opts.page) || 1)
   const perPage = Math.min(100, Math.max(5, Number(opts.perPage) || 10))
@@ -137,8 +128,7 @@ async function topStories(user, f, opts = {}) {
   }
 }
 
-/* How many stories were published in the window - a different question from
-   how many were read. */
+/* How many stories were published in the window - a different question from how many were. */
 async function publishedCount(user, f) {
   const where = ['s.status = ?', 's.published_at >= ?', 's.published_at <= ?']
   const params = ['published', f.from, f.to + 'T23:59:59']

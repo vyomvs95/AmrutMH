@@ -1,10 +1,5 @@
 'use strict'
-/* The public read path.
-
-   Everything here is open to anyone and shows ONLY published stories. Nothing
-   in a draft, awaiting review or sent back is reachable, and no staff detail
-   leaves this file. It is what the portal itself reads so a story written in
-   the office appears on the site without anybody copying files around. */
+/* The public read path. */
 
 const db = require('../../core/db')
 const visitor = require('../../core/visitor')
@@ -97,8 +92,7 @@ async function handle(req, res, route, url) {
     res.end()
     return true
   }
-  /* Two things the portal may POST: "this was read" and "this was clicked".
-     Both take an identifier and nothing else. */
+  /* The portal may POST two things: a read, and a click. */
   if (req.method === 'POST') {
     const view = route.match(/^\/api\/view\/([A-Za-z0-9_-]{1,40})$/)
     if (view) {
@@ -106,8 +100,7 @@ async function handle(req, res, route, url) {
       json(res, 200, { ok: true })
       return true
     }
-    /* a visit to the site. Same meaning the existing portal uses: every
-       visit, not unique people — so the two numbers can be compared. */
+    /* a visit to the site. Same meaning the existing portal uses: every visit, not unique. */
     if (route === '/api/visit') {
       await db.run('UPDATE site_counters SET value = value + 1, updated_at = ? WHERE name = ?',
         [new Date().toISOString(), 'visits'])
@@ -127,7 +120,7 @@ async function handle(req, res, route, url) {
   }
   if (req.method !== 'GET') { json(res, 405, { error: 'read only' }); return true }
 
-  /* the 16 sections, with how many published stories each holds */
+  /* the 16 sections, with how many published stories each holds. */
   if (route === '/api/sections') {
     const rows = await db.all(`
       SELECT se.slug, se.key_en, se.name_mr, COUNT(s.id) AS n
@@ -139,7 +132,7 @@ async function handle(req, res, route, url) {
     return true
   }
 
-  /* a page of published stories, newest first, optionally one section */
+  /* a page of published stories, newest first, optionally one section. */
   if (route === '/api/stories') {
     const section = url.searchParams.get('section')
     const page = Math.max(1, Number(url.searchParams.get('page')) || 1)
@@ -160,7 +153,7 @@ async function handle(req, res, route, url) {
     return true
   }
 
-  /* one story, in full */
+  /* one story, in full. */
   const one = route.match(/^\/api\/stories\/([A-Za-z0-9_-]+)$/)
   if (one) {
     if (!ids.looksValid(one[1])) { json(res, 404, { error: 'not found' }); return true }
@@ -185,7 +178,7 @@ async function handle(req, res, route, url) {
     return true
   }
 
-  /* the six lines that scroll under the navigation */
+  /* the six lines that scroll under the navigation. */
   if (route === '/api/ticker') {
     const rows = await db.all(
       'SELECT public_id, text_mr, link_url FROM ticker_items WHERE is_active = 1 ORDER BY position, id')
@@ -193,7 +186,7 @@ async function handle(req, res, route, url) {
     return true
   }
 
-  /* advertisements that are running right now, for one placement */
+  /* advertisements that are running right now, for one placement. */
   if (route === '/api/ads') {
     const slot = url.searchParams.get('slot')
     const today = new Date().toISOString().slice(0, 10)
@@ -222,7 +215,7 @@ async function handle(req, res, route, url) {
     return true
   }
 
-  /* the artwork of a running advertisement */
+  /* the artwork of a running advertisement. */
   const adImg = route.match(/^\/api\/ads\/img\/([A-Za-z0-9_-]+)$/)
   if (adImg) {
     if (!ids.looksValid(adImg[1])) { json(res, 404, { error: 'not found' }); return true }
@@ -246,7 +239,7 @@ async function handle(req, res, route, url) {
     return true
   }
 
-  /* a photograph, at the size asked for */
+  /* a story photograph, at the width asked for */
   const img = route.match(/^\/api\/img\/([A-Za-z0-9_-]+)$/)
   if (img) {
     if (!ids.looksValid(img[1])) { json(res, 404, { error: 'not found' }); return true }

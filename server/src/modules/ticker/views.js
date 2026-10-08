@@ -85,8 +85,7 @@ ${saved ? '<div class="note" style="border-left-color:var(--ok)">बदल ज�
 <span style="display:block;color:var(--muted)">Only the head office can change this band.</span></div>
 
 <script>
-/* Dragging to reorder. The arrows above do the same thing without any
-   scripting, so nothing is lost if this does not run. */
+/* Drag to reorder. The arrow buttons do the same without scripting. */
 (function () {
   var list = document.getElementById('ticklist')
   if (!list) return

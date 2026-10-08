@@ -79,9 +79,7 @@ export default function CountUp({ to, duration = 1100, className = '' }) {
   }, [to, duration])
 
   return (
-    /* translate="no" matters: a page translator takes ownership of a text
-       node and then does not follow React's updates, which froze this at its
-       first value — 0 — on a translated page. Digits need no translating. */
+    /* translate="no" matters: a page translator takes ownership of a text node and then does. */
     <span ref={ref} translate="no" className={className} style={{ fontVariantNumeric: 'tabular-nums' }}>
       {n}
     </span>

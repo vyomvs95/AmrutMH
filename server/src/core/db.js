@@ -1,12 +1,5 @@
 'use strict'
-/* One thin layer over the database so the rest of the code never cares which
-   one is in use.
-
-   - No DATABASE_URL  -> a single file, data/amrut.db, using the SQLite engine
-                         built into Node. Nothing to install.
-   - DATABASE_URL set  -> that PostgreSQL server. AMRUT's own standard.
-
-   Queries are written with "?" placeholders and translated for PostgreSQL. */
+/* One layer over PostgreSQL, or the fallback file database. */
 
 const fs = require('node:fs')
 const path = require('node:path')

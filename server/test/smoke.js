@@ -1,10 +1,5 @@
 'use strict'
-/* End-to-end check of the whole office, over real HTTP.
-   Start the office first, then:  node test/smoke.js
-
-   It signs in as each kind of person, writes a story with a photograph, takes
-   it through review to publication, and then checks the things that must NOT
-   be possible. Run it after any change. */
+/* End-to-end check of the whole office, over real HTTP. */
 
 const BASE = process.env.SMOKE_BASE || 'http://localhost:4000'
 const OFFICE = BASE + '/office'
@@ -17,7 +12,7 @@ const ok = (name, got, want) => {
   good ? pass++ : fail++
 }
 
-/* ---- the smallest possible browser ---- */
+/* ---- the smallest possible browser . */
 function jar() {
   const store = new Map()
   return {
@@ -51,7 +46,7 @@ async function signIn(email, password) {
   return { j, status: res.status }
 }
 
-/* a real PNG, written by hand so the test needs no fixtures */
+/* a real PNG, written by hand so the test needs no fixtures. */
 function png() {
   const zlib = require('node:zlib')
   const w = 60, h = 40
@@ -201,17 +196,17 @@ async function act(j, token, what, extra = {}) {
   const afterOne = await count()
   ok('a read is counted', afterOne.views, before.views + 1)
   ok('and the reader is counted once', afterOne.uniques, before.uniques + 1)
-  /* same visitor again within the minute: neither number should move */
+  /* same visitor again within the minute: neither number should move. */
   await fetch(`${API}/view/${token}`, { method: 'POST' })
   const afterTwice = await count()
   ok('a refresh does not inflate views', afterTwice.views, afterOne.views)
   ok('nor unique readers', afterTwice.uniques, afterOne.uniques)
-  /* a different browser is a different reader */
+  /* a different browser is a different reader. */
   await fetch(`${API}/view/${token}`, { method: 'POST', headers: { 'user-agent': 'another-reader/1.0' } })
   const afterOther = await count()
   ok('a second reader adds both', afterOther.views, afterOne.views + 1)
   ok('and counts as a new reader', afterOther.uniques, afterOne.uniques + 1)
-  /* archive stories are counted too, by their old number */
+  /* archive stories are counted too, by their old number. */
   await fetch(`${API}/view/100`, { method: 'POST', headers: { 'user-agent': 'archive-reader/1.0' } })
   const archive = await (await visit(ed.j, `${OFFICE}/analytics?days=7&source=archive`)).text()
   ok('archive stories are counted', /जुन्या संकेतस्थळावरून|<b>1<\/b>/.test(archive), true)
@@ -233,7 +228,7 @@ async function act(j, token, what, extra = {}) {
   })
   ok('a line can be edited', saved.status, 302)
   ok('and the portal sees it', (await (await fetch(`${API}/ticker`)).json()).some((l) => l.text === 'चाचणी ओळ'), true)
-  /* a link that is neither a path nor a web address must be refused */
+  /* a link that is neither a path nor a web address must be refused. */
   const bad = await visit(ed.j, `${OFFICE}/ticker/${lineId}/save`, {
     method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({ _csrf: csrfFrom(editPage), text_mr: 'चाचणी ओळ', link_url: 'javascript:alert(1)', is_active: '1' }),

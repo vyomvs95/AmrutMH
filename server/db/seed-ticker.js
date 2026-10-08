@@ -1,7 +1,5 @@
 'use strict'
-/* The six lines that run in the band under the navigation.
-   Seeded once with sensible starting text; after that the head office edits
-   them from the office at /office/ticker. */
+/* The six lines that run in the band under the navigation. */
 
 const db = require('../src/core/db')
 const ids = require('../src/core/ids')

@@ -8,8 +8,7 @@ import ScrollProgress from './components/ScrollProgress'
 import Assistant from './components/Assistant'
 import Home from './pages/Home'
 
-/* Everything beyond the homepage is split out; article bodies and full
-   category lists are fetched as JSON when those pages open. */
+/* Everything beyond the homepage is split out; article bodies and full category lists are. */
 const Category = lazy(() => import('./pages/Category'))
 const About = lazy(() => import('./pages/About'))
 const Survey = lazy(() => import('./pages/Survey'))
@@ -47,9 +46,7 @@ export default function App() {
         </Suspense>
       </main>
 
-      {/* The breathing space belongs above this pair. It used to sit on the
-          footer, which left a gap between the visitor count and the footer
-          once the count was added — and still works if the count is absent. */}
+      {/* spacing sits on the pair, not on the footer, so no gap appears between them */}
       <div className="mt-24">
         <VisitorCount />
         <Footer />

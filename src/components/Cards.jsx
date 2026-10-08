@@ -2,9 +2,7 @@ import { Link } from 'react-router-dom'
 import Img from './Img'
 import { leadImage, dateMr, hasArticle } from '../lib/content'
 
-/* A story we hold the full text for gets a link; one we only hold a
-   card for is shown but not linked, rather than promising a page that
-   would 404. */
+/* A story we hold in full gets a link; a summary-only card does not. */
 function Wrap({ item, className, children }) {
   if (hasArticle(item.id)) {
     return (
@@ -16,10 +14,7 @@ function Wrap({ item, className, children }) {
   return <div className={className}>{children}</div>
 }
 
-/* ------------------------------------------------------------------
-   Feature — the People strand. One person, one photograph, room to
-   breathe. Alternates side on wide screens so the page has a pulse.
-   ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ Feature — the People. */
 export function StoryFeature({ item, flip = false, eyebrow }) {
   const image = leadImage(item)
 
@@ -52,9 +47,7 @@ export function StoryFeature({ item, flip = false, eyebrow }) {
   )
 }
 
-/* ------------------------------------------------------------------
-   Card — the workhorse. Used in grids across category pages.
-   ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ Card — the. */
 export function StoryCard({ item, showCat = false, priority = false }) {
   const image = leadImage(item)
 
@@ -87,9 +80,7 @@ export function StoryCard({ item, showCat = false, priority = false }) {
   )
 }
 
-/* ------------------------------------------------------------------
-   Row — the Record register. Dense, scannable, thumbnail-led.
-   ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ Row — the Record. */
 export function RecordRow({ item, showCat = true }) {
   const image = leadImage(item)
 
@@ -120,10 +111,7 @@ export function RecordRow({ item, showCat = true }) {
   )
 }
 
-/* ------------------------------------------------------------------
-   Compact — text-only, for archive lists where the artwork is a poster
-   or a graphic rather than a photograph worth showing large.
-   ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ Compact — text-only. */
 export function CompactRow({ item }) {
   return (
     <Wrap item={item} className="group block border-b border-warm-100 py-4">

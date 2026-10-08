@@ -1,10 +1,5 @@
 'use strict'
-/* The placements that can be sold, and what each costs.
-
-   IMPORTANT: these prices are PLACEHOLDERS. On the call the client said the
-   rate chart from their other portal (heard as "RPTO India") sits with Hemant,
-   and that AMRUT's 13-15 lakh monthly viewership means the numbers there need
-   raising. Replace the figures below with theirs before anything is sold. */
+/* The placements that can be sold, and what each costs. */
 
 const db = require('../src/core/db')
 const ids = require('../src/core/ids')
@@ -24,7 +19,7 @@ const SLOTS = [
    'बातमीच्या मजकुरात, विषयाशी जुळणारी.'],
 ]
 
-/* placeholder rates in rupees: [2 days, 7, 14, 30] */
+/* placeholder rates in rupees: [2 days, 7, 14, 30]. */
 const RATES = {
   popup:     [4000, 12000, 20000, 35000],
   hero:      [5000, 15000, 25000, 45000],

@@ -1,7 +1,5 @@
 'use strict'
-/* The scrolling band under the portal's navigation.
-   Head office only — a district coordinator gets the same "not found" as
-   anyone who is not allowed in. */
+/* The scrolling band under the portal's navigation. */
 
 const db = require('../../core/db')
 const ids = require('../../core/ids')
@@ -37,7 +35,7 @@ async function handle(ctx) {
   const form = await readBody(req).catch(() => null)
   if (!form || !auth.csrfOk(csrf, form.get('_csrf'))) { notFound(res); return true }
 
-  /* reorder: either a dragged list of addresses, or one line nudged up or down */
+  /* reorder: either a dragged list of addresses, or one line nudged up or down. */
   if (route === '/ticker/reorder') {
     const order = form.get('order')
     if (order) {
@@ -71,8 +69,7 @@ async function handle(ctx) {
     if (!row) { notFound(res); return true }
     const text = (form.get('text_mr') || '').trim().slice(0, 160)
     if (!text) { redirect(res, B + '/ticker?edit=' + m[1]); return true }
-    /* A link may point inside the portal (/govet-schemes) or at a full address.
-       Anything else is refused, so a line cannot carry a javascript: link. */
+    /* A link may point inside the portal (/govet-schemes) or at a full address. Anything else. */
     let link = (form.get('link_url') || '').trim().slice(0, 400)
     if (link && !/^(\/[^\s]*|https?:\/\/[^\s]+)$/i.test(link)) link = ''
     await db.run(

@@ -1,6 +1,5 @@
 'use strict'
-/* Who may use the office. Read-only for now: accounts are made by the seed
-   script. An add/edit screen is the next thing this module needs. */
+/* Who may use the office. Read-only for now: accounts are made by the seed script. An. */
 const { esc, page, ROLE_MR, ROLE_EN, u } = require('../../shared/layout')
 const T = require('../../shared/table')
 

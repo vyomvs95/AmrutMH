@@ -1,19 +1,4 @@
-/**
- * Stories written in the back office.
- *
- * The portal's own archive is a static snapshot in this repository. Anything
- * the district coordinators write afterwards lives in the office database, and
- * this module is the one place that knows how to reach it.
- *
- * It tries, in order:
- *   1. the office's public read path, if VITE_OFFICE_API is set at build time
- *      (e.g. VITE_OFFICE_API=https://amrutmaharashtra.org/api)
- *   2. files committed into public/data/office by `npm run export` in server/
- *   3. nothing — and the site behaves exactly as it did before.
- *
- * So the same build works whether or not the office is reachable from the
- * internet, which is still an open question with the client's hosting.
- */
+/* Stories written in the back office. */
 
 const API = String(import.meta.env?.VITE_OFFICE_API || '').replace(/\/+$/, '')
 const STATIC = '/data/office'
@@ -96,17 +81,7 @@ export async function officeArticle(id) {
   return null
 }
 
-/**
- * Tell the office a story was read.
- *
- * Works for both kinds of story: one written in the office, and one that came
- * across from the old site (those keep their original number). Nothing is sent
- * but the identifier — the office works out "a different reader" from a hash it
- * re-salts every day, and never stores an address.
- *
- * Silent by design: if the office is unreachable, or counting is simply not set
- * up, the reader must never notice.
- */
+/* Tell the office a story was read. */
 export function reportView(id) {
   if (!API || !id) return
   try {
@@ -116,13 +91,7 @@ export function reportView(id) {
   } catch { /* counting must never break a page */ }
 }
 
-/**
- * The six lines that scroll in the band under the navigation.
- *
- * Same three-step fallback as everything else here: the office when it is
- * reachable, then a file committed into the site, then nothing — in which case
- * the band simply does not appear.
- */
+/* The six lines that scroll in the band under the navigation. */
 let tickerPromise = null
 
 export function tickerLines() {
@@ -144,14 +113,7 @@ export function tickerLines() {
   return tickerPromise
 }
 
-/**
- * The running visitor total, carried on from the existing portal.
- *
- * Same meaning the live site uses — every visit, not unique people — so the
- * two numbers can be read side by side. Visiting counts one; if the office is
- * not reachable the carried-over figure in public/data/visits.json is shown
- * without counting, rather than a number invented in the browser.
- */
+/* The running visitor total, carried on from the existing portal. */
 let visitsPromise = null
 
 export function siteVisits() {

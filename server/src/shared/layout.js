@@ -5,10 +5,7 @@ const crypto = require('node:crypto')
 const config = require('../core/config')
 const u = config.url
 
-/* The stylesheet is cached hard by browsers, which is what you want in
-   production and maddening while working: an edit appears to do nothing. So its
-   address carries a short hash of the file. Change the file, the address
-   changes, and every browser fetches it again on the next page load. */
+/* The stylesheet address carries a hash of the file, so a change is never cached. */
 function styleVersion() {
   try {
     const file = path.join(__dirname, '..', 'public', 'office.css')

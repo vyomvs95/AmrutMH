@@ -43,7 +43,7 @@ export default function Header() {
         मुख्य मजकुराकडे जा
       </a>
 
-      {/* Government identity strip — kept, but reduced to a quiet line */}
+      {/* Government identity strip — kept, but reduced to a quiet line. */}
       <div className="bg-ink text-cream/85">
         <div className="mx-auto flex max-w-[86rem] items-center gap-2.5 px-5 py-1.5 sm:px-8">
           {emblem && (
@@ -103,7 +103,7 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Full overlay navigation */}
+      {/* Full overlay navigation. */}
       <div
         id="site-nav"
         data-nav-open={open ? 'true' : 'false'}
@@ -142,8 +142,7 @@ export default function Header() {
               ))}
             </div>
 
-            {/* Schemes get a permanent home in the navigation — the one
-                thing a reader most often arrives looking for. */}
+            {/* Schemes get a permanent home in the navigation — the one thing a reader most often. */}
             <div
               className="nav-item rounded-lg bg-paper p-6 ring-1 ring-peach"
               style={{ '--d': '340ms' }}

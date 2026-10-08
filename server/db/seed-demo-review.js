@@ -1,11 +1,5 @@
 'use strict'
-/* SAMPLE STORIES WAITING FOR REVIEW — so the review queue can be looked at
-   before real coordinators start writing.
-
-   Makes a handful of stories from different districts, divisions and sections,
-   each written by a clearly-marked test coordinator. Clear them again with:
-     node db/seed-demo-review.js --clear
-   Never run this against a database holding real work. */
+/* SAMPLE STORIES WAITING FOR REVIEW. */
 
 const db = require('../src/core/db')
 const ids = require('../src/core/ids')
@@ -13,7 +7,7 @@ const auth = require('../src/core/auth')
 
 const DEMO = 'चाचणी खाते — '
 
-/* district (English name), section slug, headline, opening line */
+/* district (English name), section slug, headline, opening line. */
 const STORIES = [
   ['Nashik', 'beneficiary-story',
    'नाशिकमधील सुनीता पवार यांनी अमृत कर्ज योजनेतून उभारला शिवणकामाचा व्यवसाय',
@@ -51,7 +45,7 @@ const NOTE = '\n\n(ही चाचणीसाठी तयार केले�
     await db.close(); return
   }
 
-  /* one photograph already on disk, reused so the stories are not bare */
+  /* one photograph already on disk, reused so the stories are not bare. */
   const photo = await db.get('SELECT file_path, widths, img_w, img_h FROM story_images ORDER BY id DESC LIMIT 1')
 
   let made = 0
@@ -73,7 +67,7 @@ const NOTE = '\n\n(ही चाचणीसाठी तयार केले�
     const already = await db.get('SELECT id FROM stories WHERE title = ?', [title])
     if (already) continue
 
-    /* the last one is already approved, so the editor's queue shows both states */
+    /* the last one is already approved, so the editor's queue shows both states. */
     const status = made === STORIES.length - 1 ? 'approved' : 'submitted'
     const story = await db.insert(
       `INSERT INTO stories (public_id, title, body, section_id, district_id, author_id, status,

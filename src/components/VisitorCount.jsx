@@ -1,17 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { siteVisits } from '../lib/office'
 
-/**
- * The visitor total, above the footer.
- *
- * It carries on from the count the existing portal already shows, and counts
- * the same thing it counts: every visit, not unique people. The figure comes
- * from the back office — nothing is invented here, which is the whole point on
- * a portal whose old counter was found inventing its traffic.
- *
- * It counts up once, when it is scrolled into view, the way the existing site
- * does. Anyone who has asked for reduced motion simply sees the number.
- */
+/* The visitor total, above the footer. */
 export default function VisitorCount() {
   const ref = useRef(null)
   const [total, setTotal] = useState(null)
