@@ -11,7 +11,7 @@ const STATUS = {
 }
 const tag = (s) => `<span class="tag st-${s}">${(STATUS[s] || [s])[0]}</span>`
 
-/* ---------- write / edit ---------- */
+/* ---------- write / edit . */
 function form({ user, story = {}, sections, error, photos = [] }) {
   const isNew = !story.public_id
   return page({
@@ -50,7 +50,7 @@ ${error ? `<div class="err">${esc(error)}</div>` : ''}
   })
 }
 
-/* ---------- read one ---------- */
+/* ---------- read one . */
 function view({ user, story, photos, can }) {
   const act = (path, label, en, style = '') => `
     <form method="post" action="${u('/stories/' + story.public_id + '/' + path)}" style="width:auto;display:inline-block;margin:0 .4rem .4rem 0">
@@ -88,7 +88,7 @@ ${photos.length ? `<div class="thumbs">${photos.map((p) =>
   })
 }
 
-/* ---------- lists ---------- */
+/* ---------- lists . */
 function list({ user, rows, total, page: pageNo, pages, url, sort, q, scope, heading, blurb, empty }) {
   const keep = new URLSearchParams(url.search); keep.delete('q'); keep.delete('t_page')
   const here = heading === 'तपासणीसाठी' ? '/review' : '/stories'

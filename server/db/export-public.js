@@ -1,17 +1,5 @@
 'use strict'
-/* Writes every published story out as plain files.
-
-   Why this exists: the public portal is currently a static site built from JSON
-   in the repository. Until the office is reachable from the internet and the
-   site can read /api directly, this is the bridge - run it, commit the output,
-   and stories written in the office go live with the next build.
-
-   It writes somewhere harmless by default (server/data/export). Point it at the
-   site only when you mean to:
-
-     node db/export-public.js
-     node db/export-public.js --out ../public/data/office --img ../public/img
-*/
+/* Writes every published story out as plain files. */
 
 const fs = require('node:fs')
 const path = require('node:path')
@@ -93,7 +81,7 @@ const summarise = (b) => { const f = paragraphs(b)[0] || ''; return f.length > 2
     })
   }
 
-  /* the six scrolling lines, written where the portal looks for them */
+  /* the six scrolling lines, written where the portal looks for them. */
   const ticker = await db.all(
     'SELECT public_id, text_mr, link_url FROM ticker_items WHERE is_active = 1 ORDER BY position, id')
   fs.writeFileSync(path.join(outDir, '..', 'ticker.json'),

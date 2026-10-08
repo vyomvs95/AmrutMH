@@ -1,6 +1,5 @@
 'use strict'
-/* The small things every page needs: sending a reply, reading a form,
-   and writing to the record. Kept in one place so no module invents its own. */
+/* Sending a reply, reading a form, writing to the audit record. */
 
 const db = require('./db')
 

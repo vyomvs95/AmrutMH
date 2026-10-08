@@ -1,10 +1,5 @@
 'use strict'
-/* Reading a form that carries photographs (multipart/form-data).
-   Written out by hand so the office keeps needing nothing from outside.
-
-   Guards: a cap on the whole request, a cap per photograph, a cap on how many,
-   and a check of the first bytes of each file so a renamed .exe cannot pose as
-   a .jpg. */
+/* Reading a form that carries photographs (multipart/form-data). */
 
 const fs = require('node:fs')
 const path = require('node:path')
@@ -37,8 +32,7 @@ function readRaw(req) {
   })
 }
 
-/* Returns { fields, files } where fields is a plain object and files is an
-   array of { field, filename, data, kind }. */
+/* Returns { fields, files } where fields is a plain object and files is an array of {. */
 async function parse(req) {
   const type = req.headers['content-type'] || ''
   const m = type.match(/boundary=(?:"([^"]+)"|([^;]+))/i)
@@ -78,9 +72,7 @@ async function parse(req) {
   return { fields, files }
 }
 
-/* Writes one photograph under data/uploads/YYYY/MM/ and hands back the path to
-   store in the database. The file name is an unguessable id, never the name the
-   person uploaded - that keeps odd characters and look-alike names out. */
+/* Saves a photograph under data/uploads/YYYY/MM/ and returns its stored path. */
 function save(file) {
   const now = new Date()
   const rel = path.join(String(now.getFullYear()), String(now.getMonth() + 1).padStart(2, '0'))

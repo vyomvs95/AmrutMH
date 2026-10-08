@@ -25,9 +25,7 @@ const oct = (r) =>
   }).join(' ')
 
 export default function Preloader() {
-  /* Decided once, in a pure initialiser, so React's double-invoked effects
-     in development cannot race with themselves. The "seen" flag is written
-     when the sequence finishes, never when it starts. */
+  /* Decided once, in a pure initialiser, so React's double-invoked effects in development. */
   const [phase, setPhase] = useState(() => {
     try {
       if (sessionStorage.getItem(SEEN_KEY) === '1') return 'done'
@@ -51,7 +49,7 @@ export default function Preloader() {
       try {
         sessionStorage.setItem(SEEN_KEY, '1')
       } catch {
-        /* ignore */
+        /* ignore. */
       }
     }, 2800)
 
@@ -72,7 +70,7 @@ export default function Preloader() {
       role="status"
       aria-label="अमृत महाराष्ट्र सुरू होत आहे"
     >
-      {/* warm bloom behind the seal */}
+      {/* warm bloom behind the seal. */}
       <div
         className="pointer-events-none absolute h-[34rem] w-[34rem] rounded-full opacity-70 intro-bloom"
         style={{
@@ -83,7 +81,7 @@ export default function Preloader() {
       />
 
       <svg viewBox="0 0 200 200" className="relative h-40 w-40 sm:h-48 sm:w-48" aria-hidden="true">
-        {/* radiating sun */}
+        {/* radiating sun. */}
         <g className="intro-rays" stroke="#f97316" strokeWidth="2" strokeLinecap="round">
           {Array.from({ length: 16 }, (_, i) => {
             const a = ((i * 22.5 - 90) * Math.PI) / 180
@@ -103,10 +101,10 @@ export default function Preloader() {
           })}
         </g>
 
-        {/* inner disc */}
+        {/* inner disc. */}
         <circle cx="100" cy="100" r="19" fill="#f97316" className="intro-core" />
 
-        {/* inner octagon */}
+        {/* inner octagon. */}
         <polygon
           points={oct(64)}
           fill="none"
@@ -116,7 +114,7 @@ export default function Preloader() {
           className="intro-oct-in"
         />
 
-        {/* outer octagon */}
+        {/* outer octagon. */}
         <polygon
           points={oct(82)}
           fill="none"

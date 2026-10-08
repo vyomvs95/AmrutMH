@@ -1,17 +1,5 @@
 'use strict'
-/* Advertising, sponsorship and payments.
- *
- * The flow is the one the client described on the call:
- *   a district coordinator sells a placement in the field and records it
- *     -> records the money taken, with a reference
- *     -> the head office checks the receipt and starts the advertisement
- *   and it stops on its own when its days are up.
- *
- * Taking money on the site itself (a payment gateway) plugs in at
- * recordPayment: the mode is already there as "gateway". Until AMRUT has a
- * merchant account, every other mode is recorded by hand - which is exactly
- * how the coordinators collect today.
- */
+/* Advertising, sponsorship and payments. */
 
 const db = require('../../core/db')
 const ids = require('../../core/ids')
@@ -154,7 +142,7 @@ async function handle(ctx) {
     return true
   }
 
-  /* the artwork, for staff */
+  /* the artwork, for staff. */
   const imgMatch = route.match(/^\/ads\/img\/([A-Za-z0-9_-]+)$/)
   if (imgMatch) {
     if (!ids.looksValid(imgMatch[1])) { notFound(res); return true }

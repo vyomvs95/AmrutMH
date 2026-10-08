@@ -65,7 +65,7 @@ export default function Hero({ items }) {
       onBlurCapture={() => setPaused(false)}
       onKeyDown={onKey}
     >
-      {/* Frames */}
+      {/* Frames. */}
       {items.map((item, i) => (
         <div
           key={item.id}
@@ -84,7 +84,7 @@ export default function Hero({ items }) {
         </div>
       ))}
 
-      {/* Scrim — bottom-up for the text, plus a left wash on wide screens */}
+      {/* Scrim — bottom-up for the text, plus a left wash on wide screens. */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -102,7 +102,7 @@ export default function Hero({ items }) {
         aria-hidden="true"
       />
 
-      {/* Copy */}
+      {/* Copy. */}
       <div className="relative mx-auto w-full max-w-[86rem] px-5 pb-8 sm:px-8 sm:pb-12">
         <div key={current.id} className="hero-copy max-w-[46rem]">
           <p className="text-[13px] font-semibold text-saffron">{current.catMr}</p>
@@ -141,7 +141,7 @@ export default function Hero({ items }) {
           </div>
         </div>
 
-        {/* Controls — the progress bars are the pagination */}
+        {/* Controls — the progress bars are the pagination. */}
         <div className="mt-8 flex items-center gap-4 border-t border-white/15 pt-4">
           <ul className="flex flex-1 items-center gap-2 sm:gap-3">
             {items.map((item, i) => (

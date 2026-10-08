@@ -1,7 +1,5 @@
 'use strict'
-/* Settings. Everything the office needs to know about WHERE it is running
-   lives here, read from the .env file next to this folder. No code changes
-   are needed to move it to another server. */
+/* Settings. */
 
 const fs = require('node:fs')
 const path = require('node:path')
@@ -26,8 +24,7 @@ function readEnvFile() {
 const file = readEnvFile()
 const pick = (key, fallback) => process.env[key] ?? file[key] ?? fallback
 
-/* The session secret may be left blank: we make one on first run and keep it
-   in data/.session-secret so logins survive a restart. */
+/* A blank session secret is generated on first run and kept in data/. */
 function sessionSecret() {
   const given = pick('SESSION_SECRET', '')
   if (given) return given
@@ -50,11 +47,9 @@ module.exports = {
   sessionSecret: sessionSecret(),
   secureCookies: pick('SECURE_COOKIES', '0') === '1',
   uploadDir: path.resolve(ROOT, pick('UPLOAD_DIR', 'data/uploads')),
-  /* Where the public portal lives, so the office can link out to a story as a
-     reader sees it. Blank means no "view" links are shown. */
+  /* Where the public portal lives, so the office can link out to a story as a reader sees. */
   portalUrl: (pick('PORTAL_URL', '') || '').replace(/\/+$/, ''),
-  /* Where the archive's own photographs are still served from, for thumbnails
-     of stories that came across from the old site. Blank means no thumbnail. */
+  /* Where the archive's own photographs are still served from, for thumbnails of stories. */
   archiveImages: (pick('ARCHIVE_IMAGE_BASE', 'https://amrutmaharashtra.org/') || '').replace(/\/+$/, '') + '/',
   url: (p = '') => basePath + p,
 }

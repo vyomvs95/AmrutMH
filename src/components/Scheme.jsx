@@ -8,12 +8,7 @@ const ArrowOut = ({ className = '' }) => (
   </svg>
 )
 
-/* ------------------------------------------------------------------
-   The homepage scheme band.
-   This is where the saffron is spent — the one place on the page it
-   runs at full strength, because it marks the one action the site
-   most wants a reader to be able to take.
-   ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ The homepage scheme. */
 export function SchemeBand() {
   return (
     <section className="bg-ink py-16 text-cream sm:py-20" aria-labelledby="schemes-head">
@@ -68,14 +63,7 @@ export function SchemeBand() {
   )
 }
 
-/* ------------------------------------------------------------------
-   The bridge.
-   Every story on the live site ends by telling the reader they may
-   qualify, then leaving them to find AMRUT on their own. This closes
-   that gap: the scheme the story is actually about, the eligibility
-   line the article already carries, and a way to reach someone.
-   No article text is changed — this sits after it.
-   ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ The bridge. Every. */
 export function SchemeBridge({ scheme, article }) {
   if (!scheme) return null
 

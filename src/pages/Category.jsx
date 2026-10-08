@@ -23,8 +23,7 @@ function Crumb({ mr }) {
 export default function Category() {
   const { catSlug } = useParams()
   const cat = categoryBySlug(catSlug)
-  /* The bundle holds the 24 newest; the rest of the category is fetched
-     once the page is open and revealed 24 at a time. */
+  /* The bundle holds the 24 newest; the rest of the category is fetched once the page is. */
   const [all, setAll] = useState(null)
   const [shown, setShown] = useState(PAGE)
 
@@ -54,8 +53,7 @@ export default function Category() {
 
   return (
     <>
-      {/* Header — the category named, counted and described, so the
-          page announces what it holds rather than starting cold. */}
+      {/* Header — the category named, counted and described, so the page announces what it holds. */}
       <section className="border-b border-warm-200 bg-cream">
         <div className="mx-auto max-w-[86rem] px-5 py-9 sm:px-8 sm:py-14">
           <Crumb mr={cat.mr} />
@@ -72,12 +70,11 @@ export default function Category() {
         </div>
       </section>
 
-      {/* Same rail as the homepage, so the reader never loses the map —
-          and it sticks under the masthead once scrolled past. */}
+      {/* Same rail as the homepage, so the reader never loses the map — and it sticks under the. */}
       <CategoryRail label="संबंधित विभाग" />
 
       <div className="mx-auto max-w-[86rem] px-5 py-14 sm:px-8 sm:py-20">
-        {/* ---- People: editorial rhythm ---- */}
+        {/* ---- People: editorial rhythm . */}
         {cat.register === 'people' && (
           <>
             <Reveal>
@@ -93,7 +90,7 @@ export default function Category() {
           </>
         )}
 
-        {/* ---- Record: dense two-column list ---- */}
+        {/* ---- Record: dense two-column list . */}
         {cat.register === 'record' && (
           <>
             <Reveal>
@@ -109,7 +106,7 @@ export default function Category() {
           </>
         )}
 
-        {/* ---- Archive: text-forward, a reading list ---- */}
+        {/* ---- Archive: text-forward, a reading list . */}
         {cat.register === 'archive' && (
           <>
             <Reveal>
@@ -136,10 +133,7 @@ export default function Category() {
         )}
 
         <div className="mt-14 flex flex-col items-center gap-4 border-t border-warm-100 pt-8">
-          {/* One untranslatable chunk, shown-first: a page translator reorders
-              the words around a protected span and ran the two numbers
-              together — "218Of 24News". Kept as a single "24 / 218" it reads
-              correctly whatever language the page is being read in. */}
+          {/* One untranslatable chunk, shown-first: a page translator reorders the words around a. */}
           <p className="meta text-warm-400">
             <span translate="no">{Math.min(shown, total)} / {total}</span> बातम्या दाखवल्या आहेत
           </p>

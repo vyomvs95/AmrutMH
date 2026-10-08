@@ -33,7 +33,7 @@ async function handle({ res, route, url, user, withCsrf }) {
 
   const m = route.match(/^\/users\/([A-Za-z0-9_-]+)$/)
   if (m) {
-    /* not allowed and not there look the same on purpose */
+    /* not allowed and not there look the same on purpose. */
     if (user.role !== 'editor' || !ids.looksValid(m[1])) { notFound(res); return true }
     const row = await db.get(`${WITH_PLACE} WHERE u.public_id = ?`, [m[1]])
     if (!row) { notFound(res); return true }

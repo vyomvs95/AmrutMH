@@ -33,9 +33,7 @@ export default function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.5fr] lg:gap-10">
           <div>
             {logoLeft && (
-              /* The mark is a full-colour wordmark — orange swoosh, white panel,
-                 Devanagari in both. Forcing it white flattened it to a blob, so
-                 it is shown as it is; it reads cleanly on the ink background. */
+              /* The mark is a full-colour wordmark — orange swoosh, white panel, Devanagari in both.. */
               <img
                 src={logoLeft.src}
                 srcSet={logoLeft.srcSet}

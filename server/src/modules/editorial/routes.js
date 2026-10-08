@@ -1,6 +1,5 @@
 'use strict'
-/* Everything to do with a story: writing it, the review it goes through, and
-   the photographs attached to it. */
+/* Stories: writing, review, publishing, photographs. */
 
 const db = require('../../core/db')
 const ids = require('../../core/ids')
@@ -14,7 +13,7 @@ const office = require('../office/views')
 
 const notFound = (res) => send(res, 404, office.notFound())
 
-/* ---------- who may see and do what ---------- */
+/* ---------- who may see and do what . */
 
 function scopeClause(user) {
   if (user.role === 'district') return { sql: ' WHERE s.district_id = ?', params: [user.district_id] }
@@ -59,8 +58,7 @@ const STORY_SELECT = `
 
 const loadStory = (token) => db.get(STORY_SELECT + ' WHERE s.public_id = ?', [token])
 
-/* Sorting only ever happens through this map, so nothing from the address bar
-   reaches the query. Names sort in Marathi order. */
+/* Sort keys are whitelisted here; nothing from the address bar reaches the query. */
 const MR = db.isPg ? ' COLLATE "mr-IN-x-icu"' : ''
 const STORY_SORTS = {
   title: `s.title${MR}`, district: `d.name_mr${MR}`, section: `se.name_mr${MR}`,
@@ -109,7 +107,7 @@ async function summary(user) {
   return counts
 }
 
-/* ---------- the pages ---------- */
+/* ---------- the pages . */
 
 async function handle(ctx) {
   const { req, res, route, url, user, csrf, withCsrf, B } = ctx

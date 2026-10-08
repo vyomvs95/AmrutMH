@@ -3,9 +3,7 @@ const { esc, page, u } = require('../../shared/layout')
 const config = require('../../core/config')
 const T = require('../../shared/table')
 
-/* A story's own URL as a reader sees it, when we know where the portal lives.
-   The portal builds a story address from its section, its id and a slug made
-   from the headline. */
+/* A story's own URL as a reader sees it, when we know where the portal lives. */
 const slugOf = (title) => String(title || '').trim()
   .replace(/[|/\\?#%.,!'"\u201c\u201d\u2018\u2019;:()\[\]]/g, '')
   .replace(/\s+/g, '-').slice(0, 60).replace(/-+$/, '')
@@ -13,8 +11,7 @@ const slugOf = (title) => String(title || '').trim()
 const readerLink = (r) =>
   config.portalUrl && r.catSlug ? `${config.portalUrl}/${r.catSlug}/${r.id}/${slugOf(r.title)}` : null
 
-/* The small picture beside a headline. Office stories keep theirs here;
-   archive stories still have theirs on the old site. */
+/* The small picture beside a headline. Office stories keep theirs here; archive stories. */
 const thumbOf = (r) =>
   r.officeImage ? u('/img/' + r.officeImage + '?w=400')
   : (r.archiveImage && config.archiveImages ? config.archiveImages + String(r.archiveImage).replace(/^\/+/, '') : null)

@@ -1,7 +1,5 @@
 'use strict'
-/* SAMPLE READING FIGURES — for showing the dashboard before the portal is live.
-   These are invented numbers. Clear them with:  node db/seed-demo-views.js --clear
-   Never run this against a database that holds real counts. */
+/* SAMPLE READING FIGURES — for showing the dashboard before the portal is live. */
 
 const db = require('../src/core/db')
 

@@ -2,18 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { tickerLines } from '../lib/office'
 
-/**
- * The band under the navigation: six lines of news or scheme links running
- * round and round, each divided by a bar.
- *
- * The lines come from the back office, so the head office can change them
- * without a deploy. If none are set the band does not render at all, which is
- * why the portal looked the same before this existed.
- *
- * It scrolls with a CSS animation and the content is repeated once, so the loop
- * has no seam. It pauses when pointed at, and stands still for anyone who has
- * asked their system to reduce motion.
- */
+/* The band under the navigation: six lines of news or scheme links running round and. */
 export default function Ticker() {
   const [lines, setLines] = useState([])
 
@@ -37,7 +26,7 @@ export default function Ticker() {
     )
   }
 
-  /* repeated once so the loop joins invisibly */
+  /* repeated once so the loop joins invisibly. */
   const run = (copy) => (
     <div className="ticker-run" aria-hidden={copy === 1 ? 'true' : undefined}>
       {lines.map((l, i) => (

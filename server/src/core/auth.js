@@ -1,6 +1,5 @@
 'use strict'
-/* Passwords, sign-in cookies and form protection.
-   Uses only what Node ships with - nothing to install, nothing to audit. */
+/* Passwords, sign-in cookies and form protection. Uses only what Node ships with . */
 
 const crypto = require('node:crypto')
 const config = require('./config')
@@ -9,7 +8,7 @@ const SESSION_COOKIE = 'amrut_office'
 const CSRF_COOKIE = 'amrut_csrf'
 const SESSION_HOURS = 12
 
-/* ---------- passwords ---------- */
+/* ---------- passwords . */
 
 function hashPassword(plain) {
   const salt = crypto.randomBytes(16).toString('base64url')
@@ -29,7 +28,7 @@ function verifyPassword(plain, stored) {
   } catch { return false }
 }
 
-/* ---------- cookies ---------- */
+/* ---------- cookies . */
 
 function parseCookies(header = '') {
   const out = {}
@@ -49,7 +48,7 @@ function cookieHeader(name, value, { maxAge = null, clear = false } = {}) {
   return bits.join('; ')
 }
 
-/* ---------- sign-in token ---------- */
+/* ---------- sign-in token . */
 
 const sign = (data) =>
   crypto.createHmac('sha256', config.sessionSecret).update(data).digest('base64url')
@@ -77,10 +76,7 @@ function readSession(raw) {
   } catch { return null }
 }
 
-/* ---------- form protection (CSRF) ----------
-   A random value is kept in a cookie and repeated in a hidden field on every
-   form. A page on another website cannot read the cookie, so it cannot forge
-   a matching field. */
+/* ---------- form protection (CSRF) ---------- */
 
 const newCsrf = () => crypto.randomBytes(16).toString('base64url')
 

@@ -1,9 +1,5 @@
 'use strict'
-/* Recording a read, or a click on an advertisement.
-
-   Two numbers per subject per day: every read, and how many different people.
-   A reader is only counted once a day towards "uniques", and the same reader
-   refreshing within a minute does not inflate "views" either. */
+/* Recording a read, or a click on an advertisement. */
 
 const db = require('../../core/db')
 const { today } = require('../../core/visitor')
@@ -52,8 +48,7 @@ async function click(subject, kind) {
     [subject, kind, day])
 }
 
-/* Housekeeping: the per-visitor rows are only needed to work out "uniques" on
-   the day itself. Anything older can go. */
+/* Housekeeping: the per-visitor rows are only needed to work out "uniques" on the day. */
 async function forget(daysToKeep = 40) {
   const cutoff = new Date(Date.now() - daysToKeep * 86400000).toISOString().slice(0, 10)
   const r = await db.run('DELETE FROM view_seen WHERE day < ?', [cutoff])

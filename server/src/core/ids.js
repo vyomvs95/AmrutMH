@@ -1,14 +1,5 @@
 'use strict'
-/* Unguessable page addresses.
-   ---------------------------------------------------------------
-   Every row gets a public id such as  "k3Qp8vV1nR2sT7xWq0Ab9c4f2e".
-   It is 16 random bytes (enough that guessing is hopeless) followed by a
-   6-character checksum of those bytes.
-
-   The checksum is NOT a security measure - the randomness is. It lets the
-   server throw out a mistyped or invented address instantly, without going
-   to the database. It uses no secret key on purpose: rotating a secret would
-   otherwise invalidate every address already stored. */
+/* Unguessable page addresses. */
 
 const crypto = require('node:crypto')
 

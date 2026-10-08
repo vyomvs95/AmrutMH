@@ -1,14 +1,5 @@
 'use strict'
-/* A PostgreSQL for working on this machine only.
-   It uses binaries that came with the "embedded-postgres" development package,
-   so nothing is installed into macOS and nothing needs admin rights.
-
-   AMRUT's own server will not use this file - there, DATABASE_URL in .env
-   points at their PostgreSQL and this script is never run.
-
-     node db/local-postgres.js start
-     node db/local-postgres.js stop
-*/
+/* A PostgreSQL for working on this machine only. */
 
 const fs = require('node:fs')
 const path = require('node:path')

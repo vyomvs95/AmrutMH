@@ -1,12 +1,5 @@
 'use strict'
-/* Carries the visitor count over from the existing portal so the two agree.
-
-   The live site renders its own total into the page and counts up to it; on
-   9 October 2026 that number was 4,27,786. We start from the same place and
-   count on from there, with the same meaning the live site uses: every visit,
-   not unique people.
-
-   To re-align with the live site later:  node db/seed-visits.js 431200 */
+/* Carries the visitor count over from the existing portal so the two agree. */
 
 const db = require('../src/core/db')
 

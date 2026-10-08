@@ -1,10 +1,5 @@
 'use strict'
-/* Names, sections and districts for the stories that came across from the old
-   site. They live in the portal's own data files, not in this database, so the
-   dashboard would otherwise have nothing but a number to show.
-
-   Reads ../public/data/a/*.json if the portal is sitting beside this folder.
-   Harmless to skip. Safe to run again - it updates what it already has. */
+/* Names, sections and districts for the stories that came across from the old site. */
 
 const fs = require('node:fs')
 const path = require('node:path')
@@ -13,8 +8,7 @@ const db = require('../src/core/db')
 const DIR = path.resolve(__dirname, '..', '..', 'public', 'data', 'a')
 const CATS = path.resolve(__dirname, '..', '..', 'public', 'data', 'cat')
 
-/* The old site spells a few districts differently. Everything else matches once
-   it is lower-cased. */
+/* The old site spells a few districts differently; the rest match once lower-cased. */
 const ALIAS = {
   amaravati: 'amravati',
   aurangabad: 'chhatrapati_sambhajinagar',
@@ -33,8 +27,7 @@ const district = (d) => {
     console.log('No portal data folder beside the office - nothing to do.')
     await db.close(); return
   }
-  /* The cover photograph is listed in the category files, not the article
-     files, so collect those first: id -> photograph path on the old site. */
+  /* The cover photograph is listed in the category files, not the article files, so collect. */
   const cover = new Map()
   if (fs.existsSync(CATS)) {
     for (const f of fs.readdirSync(CATS).filter((x) => x.endsWith('.json'))) {

@@ -92,8 +92,7 @@ export default function CategoryRail({ items = categories, label = 'विभा
     </button>
   )
 
-  /* The rail and the news band move together — the band belongs to the
-     navigation, so one sticky parent holds both. */
+  /* The rail and the news band move together — the band belongs to the navigation, so one. */
   return (
     <div className="sticky top-16 z-30">
     <nav
@@ -101,7 +100,7 @@ export default function CategoryRail({ items = categories, label = 'विभा
       className="border-b border-warm-200 bg-paper/95 backdrop-blur-md"
     >
       <div className="relative mx-auto max-w-[86rem]">
-        {/* Fades — sized to clear the arrows so nothing sits half-hidden */}
+        {/* Fades — sized to clear the arrows so nothing sits half-hidden. */}
         <div
           className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-16 transition-opacity duration-200 ${
             edges.left ? 'opacity-100' : 'opacity-0'

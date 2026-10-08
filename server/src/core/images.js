@@ -1,14 +1,5 @@
 'use strict'
-/* Making a photograph light enough for a phone on a weak connection.
-
-   Each upload is kept as it arrived, and alongside it we write WebP copies at
-   400, 800 and 1400 pixels wide - the same three sizes the public portal
-   already uses. A page then asks for the size it needs instead of pulling down
-   a 4 MB photograph from a camera.
-
-   This needs the "sharp" package. If it is not installed - some locked-down
-   servers cannot build it - the office carries on and simply serves the
-   original. Nothing breaks; the photographs are just heavier. */
+/* Making a photograph light enough for a phone on a weak connection. */
 
 const fs = require('node:fs')
 const path = require('node:path')
@@ -21,7 +12,7 @@ try { sharp = require('sharp') } catch { /* optional on purpose */ }
 
 const available = () => !!sharp
 
-/* filePath is what is stored in the database, e.g. 2026/10/<id>.jpg */
+/* filePath is what is stored in the database, e.g. 2026/10/<id>.jpg. */
 async function makeVariants(filePath) {
   if (!sharp) return { widths: [], width: null, height: null }
   const full = path.join(config.uploadDir, filePath)

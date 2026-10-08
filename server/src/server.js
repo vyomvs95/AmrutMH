@@ -1,5 +1,5 @@
 'use strict'
-/* Starts the office. Run with:  node src/server.js  */
+/* Starts the office. Run with: node src/server.js. */
 
 const http = require('node:http')
 const config = require('./core/config')

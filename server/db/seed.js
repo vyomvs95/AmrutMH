@@ -1,8 +1,5 @@
 'use strict'
-/* Fills in the things that do not change: Maharashtra's 6 divisions and
-   36 districts, the 16 sections of the portal, and one starting account for
-   each of the three permission levels.
-   Safe to run more than once - it skips anything already there. */
+/* Maharashtra's 6 divisions and 36 districts, the 16 sections, and one account per level. */
 
 const fs = require('node:fs')
 const path = require('node:path')
@@ -11,9 +8,7 @@ const db = require('../src/core/db')
 const ids = require('../src/core/ids')
 const auth = require('../src/core/auth')
 
-/* Divisions and their districts, as the state is actually organised.
-   Note for the client: the brief said "6 districts under each divisional
-   head". In practice the count runs from 5 to 8. Seeded as it really is. */
+/* Divisions and their districts, as the state is actually organised. */
 const DIVISIONS = [
   ['कोकण', 'Konkan', [
     ['मुंबई शहर', 'Mumbai City'], ['मुंबई उपनगर', 'Mumbai Suburban'], ['ठाणे', 'Thane'],
@@ -69,7 +64,7 @@ const password = () => crypto.randomBytes(9).toString('base64url')
   await db.applySchema()
   const now = new Date().toISOString()
 
-  /* divisions + districts */
+  /* divisions + districts. */
   for (const [mr, en, districts] of DIVISIONS) {
     let div = await db.get('SELECT id FROM divisions WHERE name_en = ?', [en])
     if (!div) {
@@ -86,7 +81,7 @@ const password = () => crypto.randomBytes(9).toString('base64url')
     }
   }
 
-  /* sections */
+  /* sections. */
   let order = 0
   for (const [slug, key, mr] of SECTIONS) {
     order += 1
@@ -97,7 +92,7 @@ const password = () => crypto.randomBytes(9).toString('base64url')
     }
   }
 
-  /* one starting account per permission level */
+  /* one starting account per permission level. */
   const gondia = await db.get('SELECT id FROM districts WHERE name_en = ?', ['Gondia'])
   const nagpur = await db.get('SELECT id FROM divisions WHERE name_en = ?', ['Nagpur'])
   const starters = [
