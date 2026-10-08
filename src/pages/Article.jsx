@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Img from '../components/Img'
 import Reveal from '../components/Reveal'
 import { SchemeBridge } from '../components/Scheme'
 import { StoryCard } from '../components/Cards'
-import { itemById, img, dateMr, schemeFor, hasArticle, org } from '../lib/content'
-import { articleById, articleHero } from '../lib/articles'
+import { img, dateMr, schemeFor, org } from '../lib/content'
+import { loadArticle, articleHero } from '../lib/articles'
 import NotFound from './NotFound'
 
 function Meta({ article }) {
@@ -28,21 +28,51 @@ function Meta({ article }) {
   )
 }
 
+/* Placeholder while the story is fetched — same footprint as the page,
+   so nothing jumps when the text arrives. */
+function ArticleLoading() {
+  return (
+    <div aria-busy="true" aria-label="लोड होत आहे">
+      <div className="border-b border-warm-200 bg-cream">
+        <div className="mx-auto max-w-[86rem] px-5 py-9 sm:px-8 sm:py-12">
+          <div className="h-3 w-40 rounded bg-warm-200/70" />
+          <div className="mt-6 h-9 w-full max-w-[40rem] rounded bg-warm-200/70" />
+          <div className="mt-3 h-9 w-2/3 max-w-[28rem] rounded bg-warm-200/70" />
+        </div>
+      </div>
+      <div className="mx-auto max-w-[64rem] px-5 py-12 sm:px-8">
+        <div className="aspect-[3/2] w-full rounded-lg bg-warm-100" />
+      </div>
+    </div>
+  )
+}
+
 export default function Article() {
   const { id } = useParams()
-  const article = articleById(id)
+  /* undefined while loading, null when there is no such story */
+  const [article, setArticle] = useState(undefined)
+
+  useEffect(() => {
+    let live = true
+    setArticle(undefined)
+    window.scrollTo(0, 0)
+    loadArticle(id).then((a) => live && setArticle(a))
+    return () => {
+      live = false
+    }
+  }, [id])
 
   useEffect(() => {
     if (article) document.title = `${article.title} — अमृत महाराष्ट्र`
-    window.scrollTo(0, 0)
-  }, [article, id])
+  }, [article])
 
+  if (article === undefined) return <ArticleLoading />
   if (!article) return <NotFound />
 
   const hero = articleHero(article)
   const scheme = schemeFor(article)
-  const related = article.related.map(itemById).filter(Boolean).filter((i) => hasArticle(i.id)).slice(0, 3)
-  const inlineImages = article.images.map(img).filter(Boolean).slice(1)
+  const related = article.relatedItems || []
+  const inlineImages = (article.images || []).map(img).filter(Boolean).slice(1)
 
   return (
     <article>
@@ -108,6 +138,19 @@ export default function Article() {
                 ))}
               </div>
             )}
+
+            {(article.youtube || []).map((v) => (
+              <div key={v} className="mt-10 aspect-video w-full overflow-hidden rounded-lg bg-ink">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${v}`}
+                  title={article.title}
+                  loading="lazy"
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="h-full w-full border-0"
+                />
+              </div>
+            ))}
 
             {/* District office — lifted out of the prose */}
             {(article.office || article.helpline) && (

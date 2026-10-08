@@ -4,9 +4,10 @@ A Marathi-first redesign of [amrutmaharashtra.org](https://amrutmaharashtra.org/
 positive-news and information portal of AMRUT (महाराष्ट्र संशोधन, उन्नती व प्रशिक्षण
 प्रबोधिनी), an autonomous body of the Government of Maharashtra.
 
-This is a **design proof**, not a migration. Three templates — home, category,
-article — carrying real content pulled from the live site. No placeholder text and
-no stock imagery anywhere.
+This is the **full migration**: all 3,035 stories across the 16 categories, the
+About Us page and the Amrut Parivar survey, moved word for word into the new design.
+Old URLs (`news.php?id=`, `category_news.php?category=`, `about_us.php`,
+`amrut_family_registration.php`) redirect to their new pages.
 
 Audit that preceded it: `docs/site-audit.html`.
 
@@ -70,7 +71,7 @@ same words, no longer read as part of the story.
 ## Assistant
 
 A floating assistant answers scheme, eligibility, application, document,
-district-office and contact questions, and falls back to searching all 333
+district-office and contact questions, and falls back to searching all 3,035
 collected stories.
 
 It is **grounded, not generative** — every answer is composed from this
@@ -135,17 +136,32 @@ npm run images         # re-fetch and re-optimise from the live site
 
 ## Content
 
-`src/data/content.json` — 16 categories, 333 article records, palette, org details.
-`src/data/articles.json` — 32 full article bodies, two per category.
+Re-scrape and rebuild (the scrape/ folder is not committed):
+
+```sh
+python3 scripts/scrape-live.py   # resumable; ~3,000 pages
+node scripts/build-data.mjs
+```
+
+`src/data/content.json` — 16 categories with their 24 newest items and true totals (bundled).
+`public/data/cat/<slug>.json` — every item in a category, fetched by the category page.
+`public/data/a/<id>.json` — one full article each, fetched by the article page.
+`public/data/search.json` — `[id, title, category]` for the assistant and sitemap.
 `src/data/images.json` — compact manifest, `[key, width, height, [widths]]`.
 
-Collected from the live site on 28 August 2026. Stories held in full are clickable;
-cards we hold only a summary for render but do not link, rather than promising a
-page that would 404. Category pages say how many of the total they are showing.
+Collected from the live site on 8 October 2026.
 
-## Known limits of this proof
+## Before the domain switch
 
-- 24 articles per category, not the full 2,664.
+- **Photos are hotlinked** from `amrutmaharashtra.org/photos/` (only the ~300
+  images in the manifest are optimised and self-hosted). That path must keep
+  serving after the domain moves — keep it on a subdomain, or move it to storage
+  and change `ARCHIVE` in `src/lib/content.js`.
+- **The survey posts to the old PHP handler** (`amrut_family_registration.php`)
+  with the original field names, until the new backend exists.
+- **Comments are not migrated** — they need the backend.
+
+## Known limits
 - Mobile and tablet layouts are built mobile-first and have no fixed widths, but
   were not visually confirmed on a device — worth checking on the deployed URL.
 - Light theme only. Deliberate: the cream-and-saffron identity does not survive

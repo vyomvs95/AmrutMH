@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { categories, byRegister, img, org, schemes, schemeUrl } from '../lib/content'
+import { byRegister, img, org, schemes, schemeUrl } from '../lib/content'
 
 const emblem = img('components/assets/india_transperent.png')
 const logoLeft = img('components/assets/Amrutmh.png')
@@ -170,7 +170,15 @@ export default function Header() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-5 border-t border-warm-100 pt-4">
+              <div className="mt-5 flex flex-col gap-2 border-t border-warm-100 pt-4">
+                <Link to="/about-us" className="font-serif text-[1rem] text-ink-2 transition-colors hover:text-saffron-deep">
+                  <span className="underline-grow">आमच्याविषयी</span>
+                </Link>
+                <Link to="/amrut-parivar-survey" className="font-serif text-[1rem] text-ink-2 transition-colors hover:text-saffron-deep">
+                  <span className="underline-grow">अमृत परिवार सर्वेक्षण २०२६</span>
+                </Link>
+              </div>
+              <div className="mt-4 border-t border-warm-100 pt-4">
                 <p className="meta">थेट संपर्क</p>
                 <a href={`tel:${org.phone.replace(/\s/g, '')}`} className="mt-0.5 block font-serif text-[1.05rem] text-saffron-deep">
                   {org.phone}

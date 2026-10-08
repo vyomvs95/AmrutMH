@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { answer, GREETING } from '../lib/assistant'
+import { answer, primeSearch, GREETING } from '../lib/assistant'
 
 /**
  * Site assistant.
  *
  * Answers are generated from this site's own content — the scheme list,
- * the eligibility the articles state, the district data and the 333
- * collected stories. It does not call a model, so it never invents an
+ * the eligibility the articles state, the district data and all 3,035
+ * stories migrated from the live site. It does not call a model, so it never invents an
  * eligibility rule or an office address, which matters more than
  * fluency on a government portal. Swapping a real model in behind
  * `answer()` is a single change if a key is ever provisioned.
@@ -43,7 +43,10 @@ export default function Assistant() {
   }, [log, thinking, open])
 
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 260)
+    if (open) {
+      primeSearch()
+      setTimeout(() => inputRef.current?.focus(), 260)
+    }
     const onKey = (e) => e.key === 'Escape' && setOpen(false)
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)

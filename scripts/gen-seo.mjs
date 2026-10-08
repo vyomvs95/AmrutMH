@@ -1,5 +1,5 @@
 // Emits robots.txt and sitemap.xml into dist/ after the Vite build.
-// The live site has neither, which is why ~2,700 Marathi articles are
+// The live site has neither, which is why ~3,000 Marathi articles are
 // close to invisible in search (audit finding F-05).
 
 import fs from 'node:fs/promises'
@@ -13,7 +13,8 @@ const SITE =
   'http://localhost:5173'
 
 const content = JSON.parse(await fs.readFile('src/data/content.json', 'utf8'))
-const articles = JSON.parse(await fs.readFile('src/data/articles.json', 'utf8'))
+// every migrated story: [id, title, categoryKey]
+const index = JSON.parse(await fs.readFile('public/data/search.json', 'utf8'))
 
 const slugify = (s) =>
   String(s).toLowerCase().replace(/_/g, '-').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
@@ -27,13 +28,10 @@ for (const c of Object.values(content.categories)) {
   urls.push({ loc: `/${slugify(c.slug)}`, priority: '0.8' })
 }
 
-for (const a of Object.values(articles)) {
-  const cat = Object.values(content.categories).find((c) => c.slug === a.cat)
-  if (!cat) continue
-  urls.push({
-    loc: `/${slugify(cat.slug)}/${a.id}/${titleSlug(a.title)}`,
-    priority: '0.6',
-  })
+urls.push({ loc: '/about-us', priority: '0.7' }, { loc: '/amrut-parivar-survey', priority: '0.7' })
+
+for (const [id, title, key] of index) {
+  urls.push({ loc: `/${slugify(key)}/${id}/${titleSlug(title)}`, priority: '0.6' })
 }
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>

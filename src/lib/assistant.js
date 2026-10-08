@@ -1,15 +1,35 @@
-import { categories, schemes, schemeUrl, org, districts, districtMr } from './content'
+import { categories, schemes, schemeUrl, org, districts, districtMr, toItem, categoryByKey } from './content'
 import offices from '../data/offices.json'
 
 /**
  * The assistant's answers are generated from this site's own content —
  * the scheme list, the eligibility rules the articles state, the district
- * data, and the 333 collected stories. Nothing is invented: where the
+ * data, and all 3,035 stories migrated from the live site. Nothing is invented: where the
  * portal genuinely does not publish something (most district office
  * addresses), the assistant says so rather than guessing.
  */
 
-const ALL = categories.flatMap((c) => c.items)
+let ALL = categories.flatMap((c) => c.items)
+
+/* The bundle carries the newest 24 stories per category. The full index
+   of every story (titles only, ~600 KB) is fetched the first time the
+   assistant is opened, so search covers the whole archive. */
+let primed = null
+export function primeSearch() {
+  primed ??= fetch('/data/search.json')
+    .then((r) => (r.ok ? r.json() : []))
+    .then((rows) => {
+      if (!rows.length) return
+      const recent = new Map(ALL.map((i) => [i.id, i]))
+      ALL = rows.map(([id, t, key]) => {
+        if (recent.has(id)) return recent.get(id)
+        const c = categoryByKey(key)
+        return toItem({ id, t, x: '' }, { slug: key, mr: c?.mr || '' })
+      })
+    })
+    .catch(() => {})
+  return primed
+}
 
 const CASTES =
   'ब्राह्मण, कायस्थ, कोमटी/वैश्य, मारवाडी, पटेल, राजपूत, यलमार, अय्यंगार, राजपुरोहित, पाटीदार, नायर, नायडू, कम्मा, कानबी, सिंधी, बनिया, बंगाली, त्यागी, सेनगुनथर, गुजराथी, जाट, लोहाना, हिंदू नेपाळी व भूमिहार'

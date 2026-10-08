@@ -71,6 +71,20 @@ const titleSlug = (s) =>
     .slice(0, 60)
     .replace(/-+$/, '')
 
+/* One story card, from the compact shape the data files use. */
+export const toItem = (it, c) => ({
+  id: it.id,
+  title: it.t,
+  excerpt: it.x,
+  image: it.im,
+  author: it.au,
+  date: it.dt,
+  catKey: c.slug,
+  catMr: c.mr,
+  catSlug: slugify(c.slug),
+  href: `/${slugify(c.slug)}/${it.id}/${titleSlug(it.t)}`,
+})
+
 export const categories = Object.values(raw.categories).map((c) => ({
   key: c.slug,
   slug: slugify(c.slug),
@@ -78,19 +92,28 @@ export const categories = Object.values(raw.categories).map((c) => ({
   total: c.total,
   register: REGISTER[c.slug] || 'archive',
   blurb: BLURB[c.slug] || '',
-  items: c.items.map((it) => ({
-    id: it.id,
-    title: it.t,
-    excerpt: it.x,
-    image: it.im,
-    author: it.au,
-    date: it.dt,
-    catKey: c.slug,
-    catMr: c.mr,
-    catSlug: slugify(c.slug),
-    href: `/${slugify(c.slug)}/${it.id}/${titleSlug(it.t)}`,
-  })),
+  items: c.items.map((it) => toItem(it, c)),
 }))
+
+export const categoryByKey = (k) => categories.find((c) => c.key === k)
+
+/* Every story in a category. The bundle carries only the 24 newest per
+   category; the full list (up to ~1,500 items) is fetched when a reader
+   opens that category, and cached for the rest of the visit. */
+const catCache = new Map()
+export function loadCategory(slug) {
+  if (!catCache.has(slug)) {
+    const c = categories.find((x) => x.slug === slug)
+    catCache.set(
+      slug,
+      fetch(`/data/cat/${slug}.json`)
+        .then((r) => (r.ok ? r.json() : []))
+        .then((list) => list.map((it) => toItem(it, { slug: c.key, mr: c.mr })))
+        .catch(() => c?.items || [])
+    )
+  }
+  return catCache.get(slug)
+}
 
 export const byRegister = (r) => categories.filter((c) => c.register === r)
 export const categoryBySlug = (s) => categories.find((c) => c.slug === s)
@@ -157,9 +180,17 @@ export function schemeFor(article) {
    ------------------------------------------------------------------ */
 /* Manifest is stored compactly as [key, width, height, [widths]] and the
    filenames are rebuilt here — it keeps ~70KB out of the bundle. */
+/* Original archive files that have not been re-encoded are served from
+   the live archive's own photo store, as they are today. */
+export const ARCHIVE = 'https://amrutmaharashtra.org/'
+
 export function img(src) {
+  if (!src) return null
   const m = images[src]
-  if (!m) return null
+  if (!m) {
+    if (!/^(photos\/|https?:\/\/)/.test(src)) return null
+    return { src: /^https?:/.test(src) ? src : ARCHIVE + src, remote: true }
+  }
   const [key, width, height, widths] = m
   const file = (w) => `/img/${key}-${w}.webp`
   return {

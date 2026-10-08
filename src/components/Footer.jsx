@@ -78,6 +78,13 @@ export default function Footer() {
                 <a href={`tel:${org.phone.replace(/\s/g, '')}`} className="transition-colors hover:text-cream">{org.phone}</a>
                 <span className="mt-1 text-cream/50">{org.address}</span>
               </address>
+              <div className="mt-4 flex flex-col gap-1.5 text-[14px]">
+                <Link to="/about-us" className="text-cream/70 transition-colors hover:text-cream">आमच्याविषयी</Link>
+                <Link to="/amrut-parivar-survey" className="text-cream/70 transition-colors hover:text-cream">अमृत परिवार सर्वेक्षण २०२६</Link>
+                <a href="https://wa.me/919112226524" target="_blank" rel="noopener noreferrer" className="text-cream/70 transition-colors hover:text-cream">
+                  WhatsApp <span aria-hidden="true">↗</span>
+                </a>
+              </div>
             </Column>
           </div>
         </div>

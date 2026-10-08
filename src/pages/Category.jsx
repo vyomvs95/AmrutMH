@@ -1,12 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Reveal from '../components/Reveal'
 import { StoryFeature, StoryCard, RecordRow, CompactRow } from '../components/Cards'
 import { SchemeBand } from '../components/Scheme'
 import CategoryRail from '../components/CategoryRail'
 import CountUp from '../components/CountUp'
-import { categoryBySlug } from '../lib/content'
+import { categoryBySlug, loadCategory } from '../lib/content'
 import NotFound from './NotFound'
+
+const PAGE = 24
 
 function Crumb({ mr }) {
   return (
@@ -21,6 +23,20 @@ function Crumb({ mr }) {
 export default function Category() {
   const { catSlug } = useParams()
   const cat = categoryBySlug(catSlug)
+  /* The bundle holds the 24 newest; the rest of the category is fetched
+     once the page is open and revealed 24 at a time. */
+  const [all, setAll] = useState(null)
+  const [shown, setShown] = useState(PAGE)
+
+  useEffect(() => {
+    let live = true
+    setAll(null)
+    setShown(PAGE)
+    if (cat) loadCategory(cat.slug).then((list) => live && setAll(list))
+    return () => {
+      live = false
+    }
+  }, [cat])
 
   useEffect(() => {
     if (cat) document.title = `${cat.mr} — अमृत महाराष्ट्र`
@@ -32,7 +48,9 @@ export default function Category() {
 
   if (!cat) return <NotFound />
 
-  const [lead, ...rest] = cat.items
+  const items = (all && all.length ? all : cat.items).slice(0, shown)
+  const total = all ? all.length : cat.total
+  const [lead, ...rest] = items
 
   return (
     <>
@@ -117,12 +135,21 @@ export default function Category() {
           </>
         )}
 
-        {/* Honest about the sample: this proof holds 24 of each category,
-            and only the stories we hold in full are clickable. */}
-        <p className="meta mt-14 border-t border-warm-100 pt-6 text-warm-400">
-          या प्रारूपात {cat.mr} मधील {cat.items.length} बातम्या दाखवल्या आहेत —
-          एकूण {cat.total} पैकी. पूर्ण मजकूर उपलब्ध असलेल्या बातम्या उघडता येतात.
-        </p>
+        <div className="mt-14 flex flex-col items-center gap-4 border-t border-warm-100 pt-8">
+          <p className="meta text-warm-400">
+            {total} पैकी {Math.min(shown, total)} बातम्या दाखवल्या आहेत
+          </p>
+          {shown < total && (
+            <button
+              type="button"
+              onClick={() => setShown((n) => n + PAGE)}
+              disabled={!all}
+              className="rounded-full border border-saffron px-7 py-2.5 text-[15px] font-semibold text-saffron-deep transition-colors hover:bg-saffron hover:text-white disabled:opacity-50"
+            >
+              आणखी बातम्या
+            </button>
+          )}
+        </div>
       </div>
 
       {cat.register === 'people' && <SchemeBand />}
